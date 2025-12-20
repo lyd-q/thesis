@@ -1,0 +1,1721 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/lydia/Desktop/Thesis/Code/Log/raw_data_clean.log
+  log type:  text
+ opened on:   5 Nov 2025, 19:48:55
+
+. 
+. 
+. forvalues year = 1992(1)2003{
+  2. clear
+  3. import excel "`path'/Raw_data/Worldwide`year'.xls", firstrow
+  4. gen year = `year'
+  5. describe
+  6. save "`path'/Data/nih_raw_`year'.dta", replace
+  7. }
+(23 vars, 38,577 obs)
+
+Contains data
+ Observations:        38,577                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str30   %30s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str76   %76s                  PROJECT TITLE
+DEPTNAME        str4    %9s                   DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      str8    %9s                   DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str4    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str10   %10s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1992.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1992.dta saved
+(23 vars, 35,740 obs)
+
+Contains data
+ Observations:        35,740                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str30   %30s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str56   %56s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1993.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1993.dta saved
+(23 vars, 39,606 obs)
+
+Contains data
+ Observations:        39,606                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str36   %36s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str81   %81s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1994.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1994.dta saved
+(23 vars, 39,188 obs)
+
+Contains data
+ Observations:        39,188                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str81   %81s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1995.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1995.dta saved
+(23 vars, 39,618 obs)
+
+Contains data
+ Observations:        39,618                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str81   %81s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str28   %28s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1996.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1996.dta saved
+(23 vars, 41,510 obs)
+
+Contains data
+ Observations:        41,510                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str56   %56s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1997.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1997.dta saved
+(23 vars, 41,508 obs)
+
+Contains data
+ Observations:        41,508                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str44   %44s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str21   %21s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str56   %56s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str34   %34s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str47   %47s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str30   %30s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1998.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1998.dta saved
+(23 vars, 45,963 obs)
+
+Contains data
+ Observations:        45,963                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str60   %60s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_1999.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_1999.dta saved
+(23 vars, 48,209 obs)
+
+Contains data
+ Observations:        48,209                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str72   %72s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2000.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2000.dta saved
+(23 vars, 49,276 obs)
+
+Contains data
+ Observations:        49,276                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str57   %57s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2001.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2001.dta saved
+(23 vars, 52,289 obs)
+
+Contains data
+ Observations:        52,289                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str4    %9s                   NIH REFERENCE
+PINAME          str45   %45s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str80   %80s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str4    %9s                   OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2002.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2002.dta saved
+(23 vars, 55,436 obs)
+
+Contains data
+ Observations:        55,436                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str31   %31s                  PI NAME
+PIPERSONID      str4    %9s                   PI PERSON ID
+PROJECTTITLE    str80   %80s                  PROJECT TITLE
+DEPTNAME        byte    %10.0g                DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      byte    %10.0g                DIRECT COST
+INDIRECTCOST    byte    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str26   %26s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         byte    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L byte    %10.0g                ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N byte    %10.0g                MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2003.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2003.dta saved
+
+. 
+. forvalues year = 2004(1)2007{
+  2. clear
+  3. import excel "`path'/Raw_data/Worldwide`year'.xls", firstrow
+  4. gen year = `year'
+  5. * a couple funding observations have characters or words
+. gen indirect_has_letter = regexm(INDIRECTCOST, "[A-Za-z]")
+  6. gen funding_has_letter = regexm(FUNDING, "[A-Za-z]")
+  7. drop if indirect_has_letter
+  8. drop if funding_has_letter
+  9. destring INDIRECTCOST, replace
+ 10. destring FUNDING, replace
+ 11. describe
+ 12. save "`path'/Data/nih_raw_`year'.dta", replace
+ 13. }
+(23 vars, 53,900 obs)
+(2 observations deleted)
+(0 observations deleted)
+INDIRECTCOST: all characters numeric; replaced as long
+FUNDING: all characters numeric; replaced as long
+
+Contains data
+ Observations:        53,898                  
+    Variables:            26                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str35   %35s                  PI NAME
+PIPERSONID      str7    %9s                   PI PERSON ID
+PROJECTTITLE    str81   %81s                  PROJECT TITLE
+DEPTNAME        str4    %9s                   DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str5    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         long    %10.0g                ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+indirect_has_~r float   %9.0g                 
+funding_has_l~r float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2004.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2004.dta saved
+(23 vars, 53,830 obs)
+(2 observations deleted)
+(0 observations deleted)
+INDIRECTCOST: all characters numeric; replaced as long
+FUNDING: all characters numeric; replaced as long
+
+Contains data
+ Observations:        53,828                  
+    Variables:            26                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str35   %35s                  PI NAME
+PIPERSONID      str7    %9s                   PI PERSON ID
+PROJECTTITLE    str106  %106s                 PROJECT TITLE
+DEPTNAME        str64   %64s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str5    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str25   %25s                  ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE byte    %10.0g                AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+indirect_has_~r float   %9.0g                 
+funding_has_l~r float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2005.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2005.dta saved
+(23 vars, 54,382 obs)
+(3 observations deleted)
+(0 observations deleted)
+INDIRECTCOST: all characters numeric; replaced as long
+FUNDING: all characters numeric; replaced as long
+
+Contains data
+ Observations:        54,379                  
+    Variables:            26                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str35   %35s                  PI NAME
+PIPERSONID      str7    %9s                   PI PERSON ID
+PROJECTTITLE    str131  %131s                 PROJECT TITLE
+DEPTNAME        str4    %9s                   DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str10   %10s                  CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str34   %34s                  STATE OR COUNTRY NAME
+ZIPCODE         str25   %25s                  ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+indirect_has_~r float   %9.0g                 
+funding_has_l~r float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2006.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2006.dta saved
+(23 vars, 53,731 obs)
+(4 observations deleted)
+(0 observations deleted)
+INDIRECTCOST: all characters numeric; replaced as long
+(1099 missing values generated)
+FUNDING: all characters numeric; replaced as long
+
+Contains data
+ Observations:        53,727                  
+    Variables:            26                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str35   %35s                  PI NAME
+PIPERSONID      str7    %9s                   PI PERSON ID
+PROJECTTITLE    str130  %130s                 PROJECT TITLE
+DEPTNAME        str4    %9s                   DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str5    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str22   %22s                  STATE OR COUNTRY NAME
+ZIPCODE         str25   %25s                  ZIP CODE
+ATTRIBUTEDTOM~L str10   %10s                  ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+indirect_has_~r float   %9.0g                 
+funding_has_l~r float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2007.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2007.dta saved
+
+. 
+. 
+. clear
+
+. import excel "`path'/Raw_data/Worldwide2008.xlsx", firstrow
+(23 vars, 52,647 obs)
+
+. gen year = 2008
+
+. gen indirect_has_letter = regexm(INDIRECTCOST, "[A-Za-z]")
+
+. gen funding_has_letter = regexm(FUNDING, "[A-Za-z]")
+
+. drop if indirect_has_letter
+(3 observations deleted)
+
+. drop if funding_has_letter
+(0 observations deleted)
+
+. destring INDIRECTCOST, replace
+INDIRECTCOST: all characters numeric; replaced as long
+(742 missing values generated)
+
+. destring FUNDING, replace
+FUNDING: all characters numeric; replaced as long
+
+. describe
+
+Contains data
+ Observations:        52,644                  
+    Variables:            26                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str7    %9s                   PI PERSON ID
+PROJECTTITLE    str156  %156s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str5    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str22   %22s                  STATE OR COUNTRY NAME
+ZIPCODE         str25   %25s                  ZIP CODE
+ATTRIBUTEDTOM~L str10   %10s                  ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+indirect_has_~r float   %9.0g                 
+funding_has_l~r float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. save "`path'/Data/nih_raw_2008.dta", replace
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2008.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2008.dta saved
+
+. 
+. clear
+
+. import excel "`path'/Raw_data/Worldwide2009.xls", firstrow
+(23 vars, 51,224 obs)
+
+. gen year = 2009
+
+. describe
+
+Contains data
+ Observations:        51,224                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    str7    %9s                   NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str82   %82s                  PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str10   %10s                  ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. save "`path'/Data/nih_raw_2009.dta", replace
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2009.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2009.dta saved
+
+. 
+. 
+. clear
+
+. import excel "`path'/Raw_data/Worldwide2010.xlsx", firstrow
+(23 vars, 51,456 obs)
+
+. gen year = 2010
+
+. describe
+
+Contains data
+ Observations:        51,456                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str26   %26s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str83   %83s                  PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str20   %20s                  STATE OR COUNTRY NAME
+ZIPCODE         str10   %10s                  ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. save "`path'/Data/nih_raw_2010.dta", replace
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2010.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2010.dta saved
+
+. 
+. forvalues year = 2011(1)2022{
+  2. clear
+  3. import excel "`path'/Raw_data/Worldwide`year'.xls", firstrow
+  4. gen year = `year'
+  5. describe
+  6. save "`path'/Data/nih_raw_`year'.dta", replace
+  7. }
+(23 vars, 51,088 obs)
+
+Contains data
+ Observations:        51,088                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str26   %26s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str81   %81s                  PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str20   %20s                  STATE OR COUNTRY NAME
+ZIPCODE         str10   %10s                  ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str37   %37s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2011.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2011.dta saved
+(24 vars, 53,330 obs)
+
+Contains data
+ Observations:        53,330                  
+    Variables:            25                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str27   %27s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str82   %82s                  PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str33   %33s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str30   %30s                  NIH MC COMBINING NAME
+DIRECTCOST      str29   %29s                  DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str6    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str7    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE str25   %25s                  AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+X               str10   %10s                  
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2012.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2012.dta saved
+(24 vars, 51,599 obs)
+
+Contains data
+ Observations:        51,599                  
+    Variables:            25                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str28   %28s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str82   %82s                  PROJECT TITLE
+DEPTNAME        str74   %74s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      str11   %11s                  DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str7    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str8    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str5    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+X               str4    %9s                   
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2013.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2013.dta saved
+(23 vars, 50,714 obs)
+
+Contains data
+ Observations:        50,714                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str28   %28s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      long    %10.0g                PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str74   %74s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2014.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2014.dta saved
+(23 vars, 51,382 obs)
+
+Contains data
+ Observations:        51,382                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str40   %40s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str27   %27s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      long    %10.0g                PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str67   %67s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str26   %26s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2015.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2015.dta saved
+(24 vars, 53,032 obs)
+
+Contains data
+ Observations:        53,032                  
+    Variables:            25                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str52   %52s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str27   %27s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str40   %40s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str66   %66s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      str19   %19s                  DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str6    %9s                   CONGRESSIONAL DISTRICT
+CITY            str23   %23s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str10   %10s                  ZIP CODE
+ATTRIBUTEDTOM~L str5    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str39   %39s                  INSTITUTION TYPE
+AWARDNOTICEDATE str25   %25s                  AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+X               str13   %13s                  
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2016.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2016.dta saved
+(23 vars, 54,692 obs)
+
+Contains data
+ Observations:        54,692                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str52   %52s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str28   %28s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str40   %40s                  PI NAME
+PIPERSONID      long    %10.0g                PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str68   %68s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str25   %25s                  CITY
+STATEORCOUNTR~E str21   %21s                  STATE OR COUNTRY NAME
+ZIPCODE         str5    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str29   %29s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2017.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2017.dta saved
+(23 vars, 57,723 obs)
+
+Contains data
+ Observations:        57,723                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str72   %72s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str27   %27s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str201  %201s                 PROJECT TITLE
+DEPTNAME        str68   %68s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str22   %22s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str5    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2018.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2018.dta saved
+(23 vars, 60,081 obs)
+
+Contains data
+ Observations:        60,081                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str75   %75s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str36   %36s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str201  %201s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str32   %32s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str5    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2019.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2019.dta saved
+(24 vars, 62,585 obs)
+
+Contains data
+ Observations:        62,585                  
+    Variables:            25                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str81   %81s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str37   %37s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str291  %291s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      str11   %11s                  DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str8    %9s                   CONGRESSIONAL DISTRICT
+CITY            str32   %32s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str8    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str5    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+X               str4    %9s                   
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2020.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2020.dta saved
+(24 vars, 63,654 obs)
+
+Contains data
+ Observations:        63,654                  
+    Variables:            25                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str81   %81s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str37   %37s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str202  %202s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      str11   %11s                  DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str6    %9s                   CONGRESSIONAL DISTRICT
+CITY            str32   %32s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str12   %12s                  ZIP CODE
+ATTRIBUTEDTOM~L str5    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str34   %34s                  INSTITUTION TYPE
+AWARDNOTICEDATE str25   %25s                  AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+X               str4    %9s                   
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2021.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2021.dta saved
+(23 vars, 65,305 obs)
+
+Contains data
+ Observations:        65,305                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str87   %87s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str43   %43s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str202  %202s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str27   %27s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2022.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2022.dta saved
+
+. 
+. forvalues year = 2023(1)2025{
+  2. clear
+  3. import excel "`path'/Raw_data/Worldwide`year'.xlsx", firstrow
+  4. gen year = `year'
+  5. describe
+  6. save "`path'/Data/nih_raw_`year'.dta", replace
+  7. }
+(23 vars, 66,147 obs)
+
+Contains data
+ Observations:        66,147                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str92   %92s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str37   %37s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str44   %44s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str204  %204s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str27   %27s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+FOA             str13   %13s                  FOA
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2023.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2023.dta saved
+(23 vars, 65,073 obs)
+
+Contains data
+ Observations:        65,073                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str92   %92s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str37   %37s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str54   %54s                  PI NAME
+PIPERSONID      str8    %9s                   PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINNING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str4    %9s                   CONGRESSIONAL DISTRICT
+CITY            str32   %32s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+FOA             str13   %13s                  FOA
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2024.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2024.dta saved
+(23 vars, 57,942 obs)
+
+Contains data
+ Observations:        57,942                  
+    Variables:            24                  
+----------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+----------------------------------------------------------------------------------
+ORGANIZATIONN~E str92   %92s                  ORGANIZATION NAME
+ORGANIZATIONI~F long    %10.0g                ORGANIZATION ID (IPF)
+PROJECTNUMBER   str19   %19s                  PROJECT NUMBER
+FUNDINGMECHAN~M str24   %24s                  FUNDING MECHANISM
+NIHREFERENCE    long    %10.0g                NIH REFERENCE
+PINAME          str57   %57s                  PI NAME
+PIPERSONID      long    %10.0g                PI PERSON ID
+PROJECTTITLE    str200  %200s                 PROJECT TITLE
+DEPTNAME        str75   %75s                  DEPT NAME
+NIHDEPTCOMBIN~E str30   %30s                  NIH DEPT COMBINING NAME
+NIHMCCOMBININ~E str31   %31s                  NIH MC COMBINING NAME
+DIRECTCOST      long    %10.0g                DIRECT COST
+INDIRECTCOST    long    %10.0g                INDIRECT COST
+FUNDING         long    %10.0g                FUNDING
+CONGRESSIONAL~T str8    %9s                   CONGRESSIONAL DISTRICT
+CITY            str31   %31s                  CITY
+STATEORCOUNTR~E str14   %14s                  STATE OR COUNTRY NAME
+ZIPCODE         str6    %9s                   ZIP CODE
+ATTRIBUTEDTOM~L str1    %9s                   ATTRIBUTED TO MEDICAL SCHOOL
+MEDICALSCHOOL~N str40   %40s                  MEDICAL SCHOOL LOCATION
+INSTITUTIONTYPE str31   %31s                  INSTITUTION TYPE
+AWARDNOTICEDATE int     %td..                 AWARD NOTICE DATE
+OPPORTUNITYNU~R str13   %13s                  OPPORTUNITY NUMBER
+year            float   %9.0g                 
+----------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+(file /Users/lydia/Desktop/Thesis/Data/nih_raw_2025.dta not found)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw_2025.dta saved
+
+. 
+. 
+. ***************************************************************
+
+. *** Aggregate data
+
+. 
+. use "`path'/Data/nih_raw_1992.dta", clear
+
+. forvalues year = 1992(1)2025 {
+  2. append using "`path'/Data/nih_raw_`year'.dta", force
+  3. erase "`path'/Data/nih_raw_`year'.dta"
+  4. save "`path'/Data/nih_raw.dta", replace
+  5. }
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+(variable PINAME was str30, now str36 to accommodate using data's values)
+(variable PROJECTTITLE was str76, now str81 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+(variable PINAME was str36, now str45 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+(variable ORGANIZATIONNAME was str40, now str44 to accommodate using data's
+       values)
+(variable NIHDEPTCOMBINNINGNAME was str30, now str34 to accommodate using data's
+       values)
+(variable NIHMCCOMBININGNAME was str30, now str47 to accommodate using data's
+       values)
+(variable INSTITUTIONTYPE was str29, now str30 to accommodate using data's
+       values)
+(variable OPPORTUNITYNUMBER was str10, now str13 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DEPTNAME was byte in the using data, but will be str4 now)
+(note: variable DIRECTCOST was byte in the using data, but will be str8 now)
+(note: variable ZIPCODE was byte in the using data, but will be str4 now)
+(variable CITY was str22, now str26 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ZIPCODE was long in the using data, but will be str4 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PIPERSONID was str4, now str7 to accommodate using data's values)
+(variable INDIRECTCOST was byte, now long to accommodate using data's values)
+(variable CONGRESSIONALDISTRICT was str4, now str5 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PROJECTTITLE was str81, now str106 to accommodate using data's values)
+(variable DEPTNAME was str4, now str64 to accommodate using data's values)
+(variable ZIPCODE was str4, now str25 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PROJECTTITLE was str106, now str131 to accommodate using data's
+       values)
+(variable CONGRESSIONALDISTRICT was str5, now str10 to accommodate using data's
+       values)
+(variable STATEORCOUNTRYNAME was str14, now str34 to accommodate using data's
+       values)
+(variable AWARDNOTICEDATE was byte, now int to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str10 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str10 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PROJECTTITLE was str131, now str156 to accommodate using data's
+       values)
+(variable DEPTNAME was str64, now str75 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PIPERSONID was str7, now str8 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+(variable PROJECTNUMBER was str19, now str26 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str8 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str37 in the using data, but will be
+       byte now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(note: variable AWARDNOTICEDATE was str25 in the using data, but will be int
+       now)
+(variable PROJECTNUMBER was str26, now str27 to accommodate using data's values)
+(variable DIRECTCOST was str8, now str29 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str5 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable PROJECTNUMBER was str27, now str28 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable PIPERSONID was long in the using data, but will be str8 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable PROJECTTITLE was str156, now str200 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable PIPERSONID was long in the using data, but will be str8 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str5 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(note: variable AWARDNOTICEDATE was str25 in the using data, but will be int
+       now)
+(variable ORGANIZATIONNAME was str44, now str52 to accommodate using data's
+       values)
+(variable INSTITUTIONTYPE was str30, now str39 to accommodate using data's
+       values)
+(variable X was str10, now str13 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable PIPERSONID was long in the using data, but will be str8 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable ORGANIZATIONNAME was str52, now str72 to accommodate using data's
+       values)
+(variable PROJECTTITLE was str200, now str201 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable ORGANIZATIONNAME was str72, now str75 to accommodate using data's
+       values)
+(variable PROJECTNUMBER was str28, now str36 to accommodate using data's values)
+(variable CITY was str26, now str32 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str5 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable ORGANIZATIONNAME was str75, now str81 to accommodate using data's
+       values)
+(variable PROJECTNUMBER was str36, now str37 to accommodate using data's values)
+(variable PROJECTTITLE was str201, now str291 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str5 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(note: variable AWARDNOTICEDATE was str25 in the using data, but will be int
+       now)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable ORGANIZATIONNAME was str81, now str87 to accommodate using data's
+       values)
+(variable PROJECTNUMBER was str37, now str43 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable ORGANIZATIONNAME was str87, now str92 to accommodate using data's
+       values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable PINAME was str45, now str54 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+(note: variable NIHREFERENCE was long in the using data, but will be str7 now)
+(note: variable PIPERSONID was long in the using data, but will be str8 now)
+(note: variable DIRECTCOST was long in the using data, but will be str29 now)
+(note: variable ATTRIBUTEDTOMEDICALSCHOOL was str1 in the using data, but will
+       be byte now)
+(note: variable MEDICALSCHOOLLOCATION was str40 in the using data, but will be
+       byte now)
+(variable PINAME was str54, now str57 to accommodate using data's values)
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+
+. 
+. use "`path'/Data/nih_raw.dta", clear
+
+. drop indirect_has_letter  funding_has_letter 
+
+. save "`path'/Data/nih_raw.dta", replace
+file /Users/lydia/Desktop/Thesis/Data/nih_raw.dta saved
+
+. ***************************************************************
+
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/lydia/Desktop/Thesis/Code/Log/raw_data_clean.log
+  log type:  text
+ closed on:   5 Nov 2025, 19:50:26
+----------------------------------------------------------------------------------
