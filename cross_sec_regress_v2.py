@@ -146,90 +146,311 @@ plt.title(f"Dollars per Capita Growth and {x_var}, All observations")
 plt.savefig(base_path / f"Outputs/Explore_Reg_Full/percap/percap_full_{x_var}.png", bbox_inches="tight")
 plt.show()
 
-# %% ################### Subset Regressions - log growth ###################
 
-# %% ### Subset, Excluding outliers ###
-nih_reg = nih[(nih['log_98_03'] < 2.5)]
-y = nih_reg['log_98_03']
-x = nih_reg[x_var]
+# %% ################### With Controls - log growth ###################
+ ### Adjust variable ###
+x_var = 'share_educ_indus'
 
-#%%
+# Get data
+nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+nih = nih[nih['year'] == 1998]
+nih = nih.dropna(subset=['log_98_03'])
+
+ ### Full Dataset Version ###
+y = nih['log_98_03']
+x = nih[[x_var, 'funding_log_percap']]
+nih_reg = nih
+
 x = sm.add_constant(x)
 model = sm.OLS(y, x).fit(cov_type='HC1')
 print(model.summary(title="Funding Growth (1998–2003) by MSA"))
-nih_reg_sorted = nih_reg.sort_values(x_var)
-plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted['log_98_03'], label="Data")
 
-# Predict
-X_sorted = sm.add_constant(nih_reg_sorted[x_var])
-y_pred = model.predict(X_sorted)
+nih["resid_log"] = model.resid
+nih_reg_sorted = nih.sort_values(x_var)
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted["resid_log"], alpha=0)
 
-plt.plot(nih_reg_sorted[x_var], y_pred, color='red', label="OLS fit")
+for r in nih_reg_sorted.itertuples(index=False):
+    if r.CBSA_title_abbrev:
+        plt.text(
+            getattr(r, x_var),
+            r.resid_log,
+            r.CBSA_title_abbrev,
+            fontsize=6,
+            alpha=0.7,
+            ha="center",
+            va="center"
+        )
 
-plt.legend()
+plt.axhline(0, color="red", linewidth=1)
+
 plt.xlabel(x_var)
-plt.ylabel("log_98_03")
-plt.title(f"Log Growth and {x_var}, All observations")
+plt.ylabel("Residual (log_98_03)")
+plt.title(f"Residualized log growth vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
+plt.savefig(base_path / f"Outputs/Explore_Reg_Full/log_control/log_control_full_{x_var}.png", bbox_inches="tight")
 plt.show()
 
-################### Subset Regressions - percap growth ###################
-# %% Get data
+
+# ['Unnamed: 0', 'CBSA_code', 'year', 'CBSA_level', 'CBSA_title', 'state',
+#        'funding_dollars', 'total_pop', 'total_income_imputed', 'bachelors_deg',
+#        'graduate_deg', 'income_per_cap', 'share_college', 'share_gradschool',
+#        'funding_dollars_percap', 'funding_log', 'funding_log_percap',
+#        'funding_dollars_1', 'funding_dollars_percap_1', 'funding_log_1',
+#        'funding_log_percap_1', 'funding_dollars_2', 'funding_dollars_percap_2',
+#        'funding_log_2', 'funding_log_percap_2', 'funding_dollars_3',
+#        'funding_dollars_percap_3', 'funding_log_3', 'funding_log_percap_3',
+#        'funding_dollars_4', 'funding_dollars_percap_4', 'funding_log_4',
+#        'funding_log_percap_4', 'funding_dollars_5', 'funding_dollars_percap_5',
+#        'funding_log_5', 'funding_log_percap_5', 'log_98_03', 'percap_98_03',
+#        'share_health_indus', 'share_educ_indus', 'CBSA_title_abbrev',
+#        'CBSA_title_abbrev_largeMSA']
+# %% ################### With Controls - percap growth ###################
+ ### Adjust variable ###
+x_var = 'funding_dollars_1'
+
+# Get data
 nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
-nih = nih[nih['year'] == 2003]
+nih = nih[nih['year'] == 1998]
 nih = nih.dropna(subset=['percap_98_03'])
 
+ ### Full Dataset Version ###
+y = nih['percap_98_03']
+x = nih[[x_var, 'funding_dollars_percap']]
+nih_reg = nih
+
+x = sm.add_constant(x)
+model = sm.OLS(y, x).fit(cov_type='HC1')
+print(model.summary(title="Funding Growth (1998–2003) by MSA"))
+
+nih["resid_log"] = model.resid
+nih_reg_sorted = nih.sort_values(x_var)
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted["resid_log"], alpha=0)
+
+for r in nih_reg_sorted.itertuples(index=False):
+    if r.CBSA_title_abbrev:
+        plt.text(
+            getattr(r, x_var),
+            r.resid_log,
+            r.CBSA_title_abbrev,
+            fontsize=6,
+            alpha=0.7,
+            ha="center",
+            va="center"
+        )
+
+plt.axhline(0, color="red", linewidth=1)
+
+plt.xlabel(x_var)
+plt.ylabel("Residual (percap_98_03)")
+plt.title(f"Residualized per capita growth vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
+plt.savefig(base_path / f"Outputs/Explore_Reg_Full/percap_control/percap_control_full_{x_var}.png", bbox_inches="tight")
+plt.show()
+
+
+
+# %% ################### Subset Regressions ###################
+# ['Unnamed: 0', 'CBSA_code', 'year', 'CBSA_level', 'CBSA_title', 'state',
+#        'funding_dollars', 'total_pop', 'total_income_imputed', 'bachelors_deg',
+#        'graduate_deg', 'income_per_cap', 'share_college', 'share_gradschool',
+#        'funding_dollars_percap', 'funding_log', 'funding_log_percap',
+#        'funding_dollars_1', 'funding_dollars_percap_1', 'funding_log_1',
+#        'funding_log_percap_1', 'funding_dollars_2', 'funding_dollars_percap_2',
+#        'funding_log_2', 'funding_log_percap_2', 'funding_dollars_3',
+#        'funding_dollars_percap_3', 'funding_log_3', 'funding_log_percap_3',
+#        'funding_dollars_4', 'funding_dollars_percap_4', 'funding_log_4',
+#        'funding_log_percap_4', 'funding_dollars_5', 'funding_dollars_percap_5',
+#        'funding_log_5', 'funding_log_percap_5', 'log_98_03', 'percap_98_03',
+#        'share_health_indus', 'share_educ_indus', 'CBSA_title_abbrev',
+#        'CBSA_title_abbrev_largeMSA']
+################### Subset - log growth ###################
 # %% ### Adjust variable ###
-x_var = 'share_college'
+x_var = 'total_pop'
 
+# Get data
+nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+nih = nih[nih['year'] == 1998]
+nih = nih.dropna(subset=['log_98_03'])
 
+### Pick Subset ####
+# top 50 in population 
+nih = nih.nlargest(50, 'funding_log_percap')
 
-# %% ### Subset, Excluding outliers ###
-nih_reg = nih[(nih['log_98_03'] < 2.5)]
-y = nih_reg['log_98_03']
-x = nih_reg[x_var]
+y = nih['log_98_03']
+x = nih[x_var]
+nih_reg = nih
 
-#%%
 x = sm.add_constant(x)
 model = sm.OLS(y, x).fit(cov_type='HC1')
 print(model.summary(title="Funding Growth (1998–2003) by MSA"))
 nih_reg_sorted = nih_reg.sort_values(x_var)
-plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted['log_98_03'], label="Data")
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted['log_98_03'], label="MSAs", alpha=0)
 
-# Predict
-X_sorted = sm.add_constant(nih_reg_sorted[x_var])
-y_pred = model.predict(X_sorted)
-
-plt.plot(nih_reg_sorted[x_var], y_pred, color='red', label="OLS fit")
-
-plt.legend()
-plt.xlabel(x_var)
-plt.ylabel("log_98_03")
-plt.title("Log Growth and Workers in Health Industry, All observations")
-plt.show()
-
-
-# %%
-nih_ranked = nih.sort_values("percap_98_03")
-
-fig, ax = plt.subplots(figsize=(8, 12))
-
-ax.set_xlim(
-    nih_ranked["percap_98_03"].min(),
-    nih_ranked["percap_98_03"].max()
-)
-
-for y, row in enumerate(nih_ranked.itertuples()):
-    ax.text(
-        row.percap_98_03,
-        y,
-        row.CBSA_title_abbrev,
-        fontsize=7,
+for _, row in nih_reg_sorted.iterrows():
+    plt.annotate(
+        row['CBSA_title_abbrev'],           
+        (row[x_var], row['log_98_03']),  
+        xytext=(5, 5),                      
+        textcoords="offset points",
+        fontsize=6,
+        alpha=0.7,
+        ha="center",
         va="center"
     )
 
-ax.set_yticks([])
-ax.set_xlabel("Change in Dollars per Capita")
-ax.set_title("Dollars per Capita Growth by MSA (Ranked)")
+# Predict
+X_sorted = sm.add_constant(nih_reg_sorted[x_var])
+y_pred = model.predict(X_sorted)
 
+plt.plot(nih_reg_sorted[x_var], y_pred, color='red', label="OLS fit")
+
+plt.legend()
+plt.xlabel(x_var)
+plt.ylabel("log_98_03")
+plt.title(f"Log Growth vs {x_var}\nTop 50 MSAs by Funding")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50/log_{x_var}.png", bbox_inches="tight")
+plt.show()
+
+
+################### Subset - percap growth ###################
+nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+nih = nih[nih['year'] == 1998]
+nih = nih.dropna(subset=['percap_98_03'])
+
+### Pick Subset ####
+# top 50 in population 
+nih = nih.nlargest(50, 'funding_dollars_percap')
+
+y = nih['percap_98_03']
+x = nih[x_var]
+nih_reg = nih
+x = sm.add_constant(x)
+model = sm.OLS(y, x).fit(cov_type='HC1')
+print(model.summary(title="Funding Growth (1998–2003) by MSA"))
+nih_reg_sorted = nih_reg.sort_values(x_var)
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted['percap_98_03'], label="MSAs", alpha=0)
+
+for _, row in nih_reg_sorted.iterrows():
+    plt.annotate(
+        row['CBSA_title_abbrev'],           
+        (row[x_var], row['percap_98_03']),  
+        xytext=(5, 5),                      
+        textcoords="offset points",
+        fontsize=6,
+        alpha=0.7,
+        ha="center",
+        va="center"
+    )
+
+# Predict
+X_sorted = sm.add_constant(nih_reg_sorted[x_var])
+y_pred = model.predict(X_sorted)
+
+plt.plot(nih_reg_sorted[x_var], y_pred, color='red', label="OLS fit")
+
+plt.legend()
+plt.xlabel(x_var)
+plt.ylabel("percap_98_03")
+plt.title(f"Dollars per Capita Growth and {x_var}\nTop 50 MSAs by Funding")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50/percap_{x_var}.png", bbox_inches="tight")
+plt.show()
+
+
+# %% ################### Subset with Controls - log growth ###################
+# ['Unnamed: 0', 'CBSA_code', 'year', 'CBSA_level', 'CBSA_title', 'state',
+#        'funding_dollars', 'total_pop', 'total_income_imputed', 'bachelors_deg',
+#        'graduate_deg', 'income_per_cap', 'share_college', 'share_gradschool',
+#        'funding_dollars_percap', 'funding_log', 'funding_log_percap',
+#        'funding_dollars_1', 'funding_dollars_percap_1', 'funding_log_1',
+#        'funding_log_percap_1', 'funding_dollars_2', 'funding_dollars_percap_2',
+#        'funding_log_2', 'funding_log_percap_2', 'funding_dollars_3',
+#        'funding_dollars_percap_3', 'funding_log_3', 'funding_log_percap_3',
+#        'funding_dollars_4', 'funding_dollars_percap_4', 'funding_log_4',
+#        'funding_log_percap_4', 'funding_dollars_5', 'funding_dollars_percap_5',
+#        'funding_log_5', 'funding_log_percap_5', 'log_98_03', 'percap_98_03',
+#        'share_health_indus', 'share_educ_indus', 'CBSA_title_abbrev',
+#        'CBSA_title_abbrev_largeMSA']
+### Adjust variable ###
+x_var = 'share_health_indus'
+
+# Get data
+nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+nih = nih[nih['year'] == 1998]
+nih = nih.dropna(subset=['log_98_03'])
+
+### Pick Subset ####
+# top 50 in percap funding 
+nih = nih.nlargest(50, 'funding_log_percap')
+
+y = nih['log_98_03']
+x = nih[[x_var, 'funding_log_percap']]
+nih_reg = nih
+
+x = sm.add_constant(x)
+model = sm.OLS(y, x).fit(cov_type='HC1')
+print(model.summary(title="Funding Growth (1998–2003) by MSA"))
+
+nih["resid_log"] = model.resid
+nih_reg_sorted = nih.sort_values(x_var)
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted["resid_log"], alpha=0)
+
+for r in nih_reg_sorted.itertuples(index=False):
+    if r.CBSA_title_abbrev:
+        plt.text(
+            getattr(r, x_var),
+            r.resid_log,
+            r.CBSA_title_abbrev,
+            fontsize=6,
+            alpha=0.7,
+            ha="center",
+            va="center"
+        )
+
+plt.axhline(0, color="red", linewidth=1)
+
+plt.xlabel(x_var)
+plt.ylabel("Residual (log_98_03)")
+plt.title(f"Residualized log growth vs {x_var}\nWith controls, top 50 MSAs by 1998 funding", fontsize=10)
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50_control/log_control_{x_var}.png", bbox_inches="tight")
+plt.show()
+
+################### Subset With Controls - percap growth ###################
+# Get data
+nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+nih = nih[nih['year'] == 1998]
+nih = nih.dropna(subset=['percap_98_03'])
+
+### Pick Subset ####
+# top 50 in percap funding 
+nih = nih.nlargest(50, 'funding_dollars_percap')
+
+y = nih['percap_98_03']
+x = nih[[x_var, 'funding_dollars_percap']]
+nih_reg = nih
+
+x = sm.add_constant(x)
+model = sm.OLS(y, x).fit(cov_type='HC1')
+print(model.summary(title="Funding Growth (1998–2003) by MSA"))
+
+nih["resid_log"] = model.resid
+nih_reg_sorted = nih.sort_values(x_var)
+plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted["resid_log"], alpha=0)
+
+for r in nih_reg_sorted.itertuples(index=False):
+    if r.CBSA_title_abbrev:
+        plt.text(
+            getattr(r, x_var),
+            r.resid_log,
+            r.CBSA_title_abbrev,
+            fontsize=6,
+            alpha=0.7,
+            ha="center",
+            va="center"
+        )
+
+plt.axhline(0, color="red", linewidth=1)
+
+plt.xlabel(x_var)
+plt.ylabel("Residual (percap_98_03)")
+plt.title(f"Residualized per capita growth vs {x_var}\nWith controls, top 50 MSAs by 1998 funding", fontsize=10)
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50_control/percap_control_{x_var}.png", bbox_inches="tight")
 plt.show()
 # %%
