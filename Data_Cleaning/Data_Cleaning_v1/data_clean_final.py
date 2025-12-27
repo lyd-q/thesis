@@ -49,11 +49,14 @@ nih["CBSA_title_abbrev"] = nih["CBSA_title"].apply(shorten_cbsa_name)
 nih.to_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
 
 # %%
-median_pop = nih.loc[nih["year"] == 1998, "total_pop"].median()
-nih["CBSA_title_abbrev_largeMSA"] = nih["CBSA_title_abbrev"] 
-mask_small = (nih["total_pop"] < median_pop)
-nih.loc[mask_small, "CBSA_title_abbrev_largeMSA"] = ""
+# median_pop = nih.loc[nih["year"] == 1998, "total_pop"].median()
+# nih["CBSA_title_abbrev_largeMSA"] = nih["CBSA_title_abbrev"] 
+# mask_small = (nih["total_pop"] < median_pop)
+# nih.loc[mask_small, "CBSA_title_abbrev_largeMSA"] = ""
+# nih.to_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+
+
+# %% Get log population
+nih['log_pop'] = np.log(nih['total_pop'])
 nih.to_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
-
-
 # %%

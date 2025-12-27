@@ -10,7 +10,7 @@ base_path = Path(__file__).resolve().parent.parent
 nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
 nih = nih[nih['year'] == 2003]
 nih = nih.dropna(subset=['log_98_03'])
-
+nih = nih.nlargest(50, 'funding_log_percap_5')
 y = nih['funding_log_percap']
 x = nih['funding_log_percap_5']
 
@@ -39,8 +39,8 @@ plt.plot(nih['funding_log_percap_5'], y_pred, color='red', label="OLS fit")
 plt.legend()
 plt.xlabel('funding_log_percap_5')
 plt.ylabel("funding_log_percap")
-plt.title(f"Mean Reversion")
-plt.savefig(base_path / f"Outputs/Explore_Reg_Full/mean_reversion_log.png", bbox_inches="tight")
+plt.title("Mean Reversion")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/mean_reversion_log_top50funding.png", bbox_inches="tight")
 plt.show()
 
 
@@ -66,6 +66,7 @@ x_var = 'funding_log_percap_1'
 nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
 nih = nih[nih['year'] == 1998]
 nih = nih.dropna(subset=['log_98_03'])
+
 
  ### Full Dataset Version ###
 y = nih['log_98_03']
@@ -369,7 +370,7 @@ plt.show()
 #        'share_health_indus', 'share_educ_indus', 'CBSA_title_abbrev',
 #        'CBSA_title_abbrev_largeMSA']
 ### Adjust variable ###
-x_var = 'share_health_indus'
+x_var = 'total_pop'
 
 # Get data
 nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
@@ -378,7 +379,7 @@ nih = nih.dropna(subset=['log_98_03'])
 
 ### Pick Subset ####
 # top 50 in percap funding 
-nih = nih.nlargest(50, 'funding_log_percap')
+nih = nih.nlargest(50, 'total_pop')
 
 y = nih['log_98_03']
 x = nih[[x_var, 'funding_log_percap']]
@@ -404,12 +405,21 @@ for r in nih_reg_sorted.itertuples(index=False):
             va="center"
         )
 
-plt.axhline(0, color="red", linewidth=1)
+# add fitted line
+X_line = sm.add_constant(nih_reg_sorted[x_var])
+fit_line = sm.OLS(nih_reg_sorted["resid_log"], X_line).fit()
+
+x_grid = nih_reg_sorted[x_var]
+y_hat = fit_line.predict(X_line)
+
+plt.plot(x_grid, y_hat, linewidth=2)  # fitted line
+
+#plt.axhline(0, color="red", linewidth=1)
 
 plt.xlabel(x_var)
 plt.ylabel("Residual (log_98_03)")
 plt.title(f"Residualized log growth vs {x_var}\nWith controls, top 50 MSAs by 1998 funding", fontsize=10)
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50_control/log_control_{x_var}.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/population_top50_control/log_control_{x_var}.png", bbox_inches="tight")
 plt.show()
 
 ################### Subset With Controls - percap growth ###################
@@ -420,7 +430,7 @@ nih = nih.dropna(subset=['percap_98_03'])
 
 ### Pick Subset ####
 # top 50 in percap funding 
-nih = nih.nlargest(50, 'funding_dollars_percap')
+nih = nih.nlargest(50, 'total_pop')
 
 y = nih['percap_98_03']
 x = nih[[x_var, 'funding_dollars_percap']]
@@ -451,6 +461,6 @@ plt.axhline(0, color="red", linewidth=1)
 plt.xlabel(x_var)
 plt.ylabel("Residual (percap_98_03)")
 plt.title(f"Residualized per capita growth vs {x_var}\nWith controls, top 50 MSAs by 1998 funding", fontsize=10)
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/funding_top50_control/percap_control_{x_var}.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/population_top50_control/percap_control_{x_var}.png", bbox_inches="tight")
 plt.show()
 # %%

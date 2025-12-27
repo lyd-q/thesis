@@ -59,7 +59,7 @@ forvalues year = 2011(1)2022{
 	save "`path'/Data/nih_raw_`year'.dta", replace
 }
 
-forvalues year = 2023(1)2025{
+forvalues year = 2023(1)2024{
 	clear
 	import excel "`path'/Raw_data/Worldwide`year'.xlsx", firstrow
 	gen year = 	`year'

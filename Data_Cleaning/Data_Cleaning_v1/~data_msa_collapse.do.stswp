@@ -112,7 +112,7 @@ save "`path'/Data/Cleaning/nih_locationlist.dta", replace
 */
 
 
-* full dataset
+* full dataset of individual grants in US
 use "`path'/Data/nih_US.dta", clear
 rename STATEORCOUNTRYNAME state_fullname
 merge m:1 state_fullname using "`path'/Data/Crosswalks/state_abbrev.dta"
@@ -295,6 +295,8 @@ use "`path'/Data/nih_msa_collapse.dta", clear
 merge m:1 msa using "`path'/Data/cbsa_pop_2000-2005.dta"
 	
 	
-	
+************************************************************
+	*** DRO
+************************************************************
 	
 log close
