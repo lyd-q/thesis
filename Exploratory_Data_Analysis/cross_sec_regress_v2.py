@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 base_path = Path(__file__).resolve().parent.parent
 
+
 # %% ################## Mean Reversion ###################
 nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
 nih = nih[nih['year'] == 2003]

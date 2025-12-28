@@ -14,11 +14,11 @@ nih.head()
 # %%
 # Keep relevant info
 nih.columns
-nih = nih.rename(columns={"funding_adj": "funding"})
+nih = nih.rename(columns={"funding_adj": "funding", "funding_real": "funding_nominal"}) # correcting naming mistake
 nih["CBSA_code"] = nih["CBSA_code"].astype(str)
 nih = nih[['ORGANIZATIONNAME', 'PROJECTNUMBER', 'FUNDINGMECHANISM', 'PINAME',
            'PROJECTTITLE', 'CONGRESSIONALDISTRICT', 'ZIPCODE', 'INSTITUTIONTYPE',
-           'funding_real', 'funding',
+           'funding_nominal', 'funding',
            'year', 'city', 'state', 'county_fips', 'county_name',
            'CBSA_code', 'CBSA_title', 'CSA_code', 'CSA_title',
            'msan', 'pmsan', 'msa', 'pmsa',
@@ -29,38 +29,35 @@ base_path = Path(__file__).resolve().parent.parent.parent
 nih.to_csv(base_path / "Data/NIH_v3/nih_grants_complete.csv", index=False)
 # This is one file to upload to RDC
 # Other file will be collapsed with BDS outcomes and census info (which I can always merge back to individual level)
+# And need to bring in CBSA crosswalk I have been using
 
 ########### Collapse and make funding metrics ###############
 # %%
-nih_funding = nih.groupby(['CBSA_code', 'CBSA_title', 'year'], as_index = False)[['funding_real', 'funding']].agg('sum')
+nih_funding = nih.groupby(['CBSA_code', 'CBSA_title', 'year'], as_index = False)[['funding_nominal', 'funding']].agg('sum')
 nih_funding['log_funding'] = np.log(nih_funding['funding'])
 nih_funding.to_csv(base_path / "Data/NIH_v3/nih_funding.csv", index=False)
 
 # %%
 ########### Share of Field by MSAs ###############
-nih_dept = nih.groupby(['CBSA_code', 'year', 'org_dept'], as_index = False)['funding'].agg('sum')
+
+nih_dept = nih.groupby(["CBSA_code", "year", "org_dept"], as_index=False)["funding"].sum()
+
+# Fix inconsistent field labels (VALUES in org_dept, not columns)
+var_map = {
+    "BIOSTATISTICS &OTHER MATH SCI": "BIOSTATISTICS & OTHER MATH SCI",
+    "PUBLIC HEALTH &PREV MEDICINE": "PUBLIC HEALTH & PREV MEDICINE",
+    "OBSTETRICS &GYNECOLOGY": "OBSTETRICS & GYNECOLOGY",
+    "PHYSICAL MEDICINE &REHAB": "PHYSICAL MEDICINE & REHAB",
+}
+nih_dept["org_dept"] = nih_dept["org_dept"].replace(var_map)
+
+# Aggregate
+nih_dept = nih_dept.groupby(["CBSA_code", "year", "org_dept"], as_index=False)["funding"].sum()
 nih_dept["CBSA_code"] = nih_dept["CBSA_code"].astype(str)
+
 all_msa = nih_dept['CBSA_code'].unique()
 all_year = nih_dept['year'].unique()
 all_dept = nih_dept['org_dept'].unique()
-# There are 21 different fields: ['', 'BIOLOGY', 'BIOMEDICAL ENGINEERING', 'CHEMISTRY',
-    #    'MICROBIOLOGY/IMMUN/VIROLOGY', 'NONE', 'OTHER BASIC SCIENCES',
-    #    'PHYSIOLOGY', 'PSYCHOLOGY', 'SOCIAL SCIENCES',
-    #    'ANATOMY/CELL BIOLOGY', 'BIOCHEMISTRY',
-    #    'BIOSTATISTICS &OTHER MATH SCI', 'INTERNAL MEDICINE/MEDICINE',
-    #    'PHARMACOLOGY', 'OTHER HEALTH PROFESSIONS', 'MISCELLANEOUS',
-    #    'PHYSICS', 'BIOSTATISTICS & OTHER MATH SCI',
-    #    'ENGINEERING (ALL TYPES)', 'PEDIATRICS', 'SURGERY', 'PATHOLOGY',
-    #    'RADIATION-DIAGNOSTIC/ONCOLOGY', 'NEUROLOGY', 'OPHTHALMOLOGY',
-    #    'PUBLIC HEALTH &PREV MEDICINE', 'PSYCHIATRY', 'GENETICS',
-    #    'PUBLIC HEALTH & PREV MEDICINE', 'NEUROSCIENCES', 'ADMINISTRATION',
-    #    'FAMILY MEDICINE', 'OBSTETRICS &GYNECOLOGY', 'EMERGENCY MEDICINE',
-    #    'VETERINARY SCIENCES', 'OBSTETRICS & GYNECOLOGY', 'ORTHOPEDICS',
-    #    'NEUROSURGERY', 'ANESTHESIOLOGY', 'NUTRITION', 'ZOOLOGY',
-    #    'DENTISTRY', 'DERMATOLOGY', 'OTOLARYNGOLOGY',
-    #    'PHYSICAL MEDICINE &REHAB', 'UROLOGY', 'PHYSICAL MEDICINE & REHAB',
-    #    'BIOPHYSICS', 'OTHER CLINICAL SCIENCES', 'NO CODE ASSIGNED',
-    #    'PLASTIC SURGERY']
 
 full_index = pd.MultiIndex.from_product(
     [all_msa, all_year, all_dept],
@@ -75,22 +72,8 @@ nih_dept_full['funding'] = nih_dept_full['funding'].fillna(0)
 nih_dept_full = nih_dept_full.rename(columns={'funding': 'funding_field'})
 nih_dept_full["CBSA_code"] = nih_dept_full["CBSA_code"].astype(str)
 
-# For each CBSA_code and year, calculate share of total funding that is in each
-# Merge in CBSA_code-year total funding
-nih_funding = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
-nih_funding["CBSA_code"] = nih_funding["CBSA_code"].astype(str)
-# nih_dept_full = nih_dept_full.merge(
-#     nih_funding,
-#     "left",
-#     on=['CBSA_code', 'year']
-# )
-# nih_dept_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_field.csv", index=False)
-# nih_dept_full['funding'] = nih_dept_full['funding'].replace(0, 1)
-# nih_dept_full['share_field'] = nih_dept_full['funding_field'] / nih_dept_full['funding']
-
-# keep only science fields
+# Keep only science fields
 excluded = ["", "NONE", "NO CODE ASSIGNED", "MISCELLANEOUS"]
-
 # Drop excluded rows completely
 nih_dept_coded = nih_dept_full.loc[
     ~nih_dept_full["org_dept"].isin(excluded)
@@ -103,7 +86,6 @@ coded_totals = (
     .sum()
     .rename(columns={"funding_field": "funding_fields_total"})
 )
-
 nih_dept_coded = nih_dept_coded.merge(
     coded_totals,
     on=["CBSA_code", "year"],
@@ -132,7 +114,7 @@ dept_cols = [
     c for c in nih_by_field_wide.columns
     if c not in ["CBSA_code", "year"]
 ]
-nih_by_field_wide["total_share_field_coded"] = nih_by_field_wide[dept_cols].sum(axis=1)
+nih_by_field_wide["total_share_field"] = nih_by_field_wide[dept_cols].sum(axis=1)
 # %%
 # Append to CBSA_code
 nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
@@ -147,6 +129,7 @@ nih_msa_dept = nih_msa.merge(
 print(nih_msa_dept['_merge'].value_counts())
 nih_msa_dept = nih_msa_dept.drop(columns=['_merge'])
 nih_msa_dept.to_csv(base_path / "Data/NIH_v3/nih_funding_field.csv", index=False)
+
 
 
 
@@ -172,47 +155,61 @@ nih_mech_full = nih_mech_full.rename(columns={'funding': 'funding_mech'})
 nih_mech_full["CBSA_code"] = nih_mech_full["CBSA_code"].astype(str)
 
 # The different funding mechanisms:
-# RPGs - SBIR/STTR
-# R&D Contracts
-# RPGs - Non SBIR/STTR --> this is R01s, and majority, and most interesting
-# Other Research-Related
-# NULL
-# Research Grants
-# Training - Institutional
-# Research Centers
-# Construction
-# Training - Individual
-# Other
+# ['Other', 'RPGs - SBIR/STTR', 'Other Research-Related',
+#        'RPGs - Non SBIR/STTR', 'NULL', 'Training - Individual',
+#        'R&D Contracts', 'Training - Institutional', 'Research Centers',
+#        'Research Grants', 'Construction']
 
-# For each CBSA_code and year, calculate share of total funding that is in each
-# Merge in CBSA_code-year total funding
-nih_funding = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
-nih_funding["CBSA_code"] = nih_funding["CBSA_code"].astype(str)
-nih_mech_full = nih_mech_full.merge(
-    nih_funding,
-    "left",
-    on=['CBSA_code', 'year']
+# Keep only science fields
+excluded = ["", "NULL", "Other"]
+# Drop excluded rows completely
+nih_mech_coded = nih_mech_full.loc[
+    ~nih_mech_full["FUNDINGMECHANISM"].isin(excluded)
+].copy()
+
+# Denominator: total funding across coded fields only (per CBSA-year)
+coded_totals = (
+    nih_mech_coded
+    .groupby(["CBSA_code", "year"], as_index=False)["funding_mech"]
+    .sum()
+    .rename(columns={"funding_mech": "funding_mech_total"})
 )
-nih_mech_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_mech.csv", index=False)
-nih_mech_full['funding'] = nih_mech_full['funding'].replace(0, 1)
-nih_mech_full['share_mech'] = nih_mech_full['funding_mech'] / nih_mech_full['funding']
+nih_mech_coded = nih_mech_coded.merge(
+    coded_totals,
+    on=["CBSA_code", "year"],
+    how="left"
+)
 
+nih_mech_coded["funding_mech_total"] = nih_mech_coded["funding_mech_total"].replace(0, 1)
 
-#%%
-# append a full share sum
-nih_mech_total = nih_mech_full.groupby(['CBSA_code', 'year'])['share_mech'].sum().reset_index()
+# Share among coded fields only
+nih_mech_coded["share_mech_coded"] = (nih_mech_coded["funding_mech"] / nih_mech_coded["funding_mech_total"])
 
-# pivot into each row is by CBSA_code and year
-nih_share_mech = nih_mech_full.pivot(index=['CBSA_code', 'year'], columns='FUNDINGMECHANISM', values='share_mech').reset_index()
-nih_share_mech['total_share_mech'] = nih_mech_total['share_mech']
-nih_share_mech.columns.name = None
-nih_share_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
+# save wide format
+nih_by_mech_wide = (
+    nih_mech_coded.pivot_table(
+        index=["CBSA_code", "year"],
+        columns="FUNDINGMECHANISM",
+        values="share_mech_coded",
+        fill_value=0
+    )
+    .reset_index()
+)
+nih_by_mech_wide.columns.name = None
 
+# add total share
+mech_cols = [
+    c for c in nih_by_mech_wide.columns
+    if c not in ["CBSA_code", "year"]
+]
+nih_by_mech_wide["total_share_mech"] = nih_by_mech_wide[mech_cols].sum(axis=1)
+# %%
 # Append to CBSA_code
 nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
 nih_msa["CBSA_code"] = nih_msa["CBSA_code"].astype(str)
+nih_by_mech_wide["CBSA_code"] = nih_by_mech_wide["CBSA_code"].astype(str)
 nih_msa_mech = nih_msa.merge(
-    nih_share_mech,
+    nih_by_mech_wide,
     "left",
     on=['CBSA_code', 'year'],
     indicator=True
@@ -220,39 +217,192 @@ nih_msa_mech = nih_msa.merge(
 print(nih_msa_mech['_merge'].value_counts())
 nih_msa_mech = nih_msa_mech.drop(columns=['_merge'])
 nih_msa_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
+# %% #################
+# For each CBSA_code and year, calculate share of total funding that is in each
+# Merge in CBSA_code-year total funding
+# nih_funding = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
+# nih_funding["CBSA_code"] = nih_funding["CBSA_code"].astype(str)
+# nih_mech_full = nih_mech_full.merge(
+#     nih_funding,
+#     "left",
+#     on=['CBSA_code', 'year']
+# )
+# nih_mech_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_mech.csv", index=False)
+# nih_mech_full['funding'] = nih_mech_full['funding'].replace(0, 1)
+# nih_mech_full['share_mech'] = nih_mech_full['funding_mech'] / nih_mech_full['funding']
+
+# # append a full share sum
+# nih_mech_total = nih_mech_full.groupby(['CBSA_code', 'year'])['share_mech'].sum().reset_index()
+
+# # pivot into each row is by CBSA_code and year
+# nih_share_mech = nih_mech_full.pivot(index=['CBSA_code', 'year'], columns='FUNDINGMECHANISM', values='share_mech').reset_index()
+# nih_share_mech['total_share_mech'] = nih_mech_total['share_mech']
+# nih_share_mech.columns.name = None
+# nih_share_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
+
+# # Append to CBSA_code
+# nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
+# nih_msa["CBSA_code"] = nih_msa["CBSA_code"].astype(str)
+# nih_msa_mech = nih_msa.merge(
+#     nih_share_mech,
+#     "left",
+#     on=['CBSA_code', 'year'],
+#     indicator=True
+# )
+# print(nih_msa_mech['_merge'].value_counts())
+# nih_msa_mech = nih_msa_mech.drop(columns=['_merge'])
+# nih_msa_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
+
 
 
 #%%
-########### Merge share of mech and funding together (?) ###############
-
+########### Merge Census (so have population for percap) ###############
+nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_working.csv")
+census = pd.read_csv(base_path / "Data/NIH_v3/census1990_msa.csv")
+nih_msa = nih_msa.merge(
+    census,
+    "left",
+    on=['CBSA_code', 'CBSA_title'],
+    indicator=True
+)
+print(nih_msa['_merge'].value_counts())
+# the unmatched ones are Puerto Rico
+nih_msa = nih_msa[nih_msa['_merge'] == "both"]
+nih_msa = nih_msa.drop(columns=['_merge'])
+nih_msa.to_csv(base_path / "Data/NIH_v3/nih_working.csv", index='False')
 
 #%%
 ########### Making funding variables ###############
-nih_by_msa = nih_by_msa[nih_by_msa['funding_dollars'] != 0]
-nih_by_msa['funding_dollars_percap'] = nih_by_msa['funding_dollars'] / nih_by_msa['total_pop'] 
-nih_by_msa['funding_log_dollars'] = np.log(nih_by_msa['funding_dollars'])
-nih_by_msa['funding_log_percap'] = np.log(nih_by_msa['funding_dollars_percap'])
+nih_msa = nih_msa[nih_msa['funding'] != 0]
+nih_msa['funding_pc'] = nih_msa['funding'] / nih_msa['total_pop'] 
+nih_msa['log_funding_pc'] = np.log(nih_msa['funding_pc'])
+nih_msa.to_csv(base_path / "Data/NIH_v3/nih_working.csv", index='False')
+
+
 
 
 #%%
+########### Merge in share of mech and funding ###############
+nih_working = pd.read_csv(base_path / "Data/NIH_v3/nih_working.csv")
+nih_field = pd.read_csv(base_path / "Data/NIH_v3/nih_funding_field.csv")
+nih_field = nih_field.drop(columns=['funding_nominal', 'funding', 'log_funding'])
+nih_mech = pd.read_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv")
+nih_mech = nih_mech.drop(columns=['funding_nominal', 'funding', 'log_funding'])
+
+nih_all = nih_working.merge(
+    nih_field,
+    "inner",
+    on=['CBSA_code', 'CBSA_title', 'year'],
+    indicator=True
+)
+print(nih_all['_merge'].value_counts())
+nih_all = nih_all.drop(columns='_merge')
+
+nih_all = nih_all.merge(
+    nih_mech,
+    "inner",
+    on=['CBSA_code', 'CBSA_title', 'year'],
+    indicator=True
+)
+print(nih_all['_merge'].value_counts())
+nih_all = nih_all.drop(columns='_merge')
+nih_all.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+# Drop if no 98-03 observation
+nih_all = nih_all[nih_all['log_98_03'].notna()]
+nih_all = nih_all[nih_all['percap_98_03'].notna()]
+nih_all.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+# 204 MSAs
+
+#%% ########### Re-do Funding Lags and Growth, Making a separate dataframe and merging in ###############
+nih_all = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih_funding = nih_all.drop(columns=['funding_pc_1', 'log_funding_1', 'log_funding_pc_1', 'log_98_03', 'percap_98_03'])
+nih_funding = nih_funding[nih_funding["year"].isin([1997, 1998, 2003])]
+vars = [
+    "funding",
+    "funding_pc",
+    "log_funding",
+    "log_funding_pc",
+]
+nih_wide = nih_funding.pivot_table(index="CBSA_code", columns="year", values=vars)
+
+# Flatten MultiIndex columns
+nih_wide.columns = [f"{v}_{int(y)}" for v, y in nih_wide.columns]
+nih_wide = nih_wide.reset_index()
+nih_wide.to_csv(base_path / "Data/NIH_v3/nih_funding_working.csv", index=False)
+
+#%%
+nih_funding = nih_wide[nih_wide['funding_1998'].notna()].copy()
+nih_funding['log_98_03'] = nih_funding['log_funding_2003'] - nih_funding['log_funding_1998']
+nih_funding['percap_98_03'] = nih_funding['funding_pc_2003'] - nih_funding['funding_pc_1998']
+nih_funding.to_csv(base_path / "Data/NIH_v3/nih_funding_working.csv", index=False)
+nih_funding['log_98_03'].describe()
+nih_funding['percap_98_03'].describe()
+
+#%%
+# Now merge these funding values into the overall dataset
+nih_all = pd.read_csv(base_path / "Data/NIH_v3/nih_all_old.csv")
+nih_all = nih_all.drop(columns=['log_98_03', 'percap_98_03','funding_pc_1', 'log_funding_1', 'log_funding_pc_1'])
+nih_merge = nih_all.merge(
+    nih_funding,
+    "left",
+    on='CBSA_code',
+    indicator=True
+)
+print(nih_merge['_merge'].value_counts())
+nih_merge = nih_merge[nih_merge['_merge'] == "both"] #193 unique CBSAs as expected
+nih_merge = nih_merge.drop(columns=['_merge'])
+nih_merge.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+#%%
 ########### Funding Lags ###############
+# SHIFT IS WRONG, need to do differently
+# nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_working.csv")
+# for lag in range(1, 6):
+#     nih_msa['funding_pc'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['funding_pc'].shift(lag)
+#     nih_msa['log_funding'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['log_funding'].shift(lag)
+#     nih_msa['log_funding_pc'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['log_funding_pc'].shift(lag)
 
-for lag in range(1, 6):
-    nih['funding_dollars'+f"_{lag}"] = nih.groupby('CBSA_code')['funding_dollars'].shift(lag)
-    nih['funding_dollars_percap'+f"_{lag}"] = nih.groupby('CBSA_code')['funding_dollars_percap'].shift(lag)
-    nih['funding_log'+f"_{lag}"] = nih.groupby('CBSA_code')['funding_log'].shift(lag)
+# # create log(f2003) - log(f1998)
+# # Make sure that we have 1998 and 2003 observations
+# nih_msa = nih_msa[(nih_msa['year'] != 2003) | nih_msa['funding_pc_5'].notna()]
+# # 204 observations for 2003
+
+# nih_msa.loc[nih_msa['year'] == 2003, 'log_98_03'] = (nih_msa['log_funding'] - nih_msa['log_funding_5'])
+# nih_msa['log_98_03'] = nih_msa.groupby('CBSA_code')['log_98_03'].transform('first')
+
+# # Change in dollars per capita
+# nih_msa.loc[nih_msa['year'] == 2003, 'percap_98_03'] = (nih_msa['funding_pc'] - nih_msa['funding_pc_5'])
+# nih_msa['percap_98_03'] = nih_msa.groupby('CBSA_code')['percap_98_03'].transform('first')
+# nih_msa.to_csv(base_path / "Data/NIH_v3/nih_all_lags.csv", index=False)
+
+# ### Kept "Data/NIH_v3/nih_all_lags.csv" with all the 5 year lags.
+# ### Otherwise, only keep growth and 1 year lags
+# var_drop = ['Unnamed: 0', 'funding_pc_2',	'log_funding_2', 'log_funding_pc_2', 
+#             'funding_pc_3', 'log_funding_3', 'log_funding_pc_3', 
+#             'funding_pc_4', 'log_funding_4', 'log_funding_pc_4', 
+#             'funding_pc_5', 'log_funding_5', 'log_funding_pc_5']
+# nih_msa = nih_msa.drop(columns = var_drop)
+# nih_msa.to_csv(base_path / "Data/NIH_v3/nih_working.csv", index=False)
 
 
-# create log(f2003) - log(f1998) for LHS
-nih = pd.read_csv(base_path / "Data/Census/census_1990/nih_msa_lags1990.csv")
-# Make sure that we have 1998 and 2003 observations
-nih = nih[(nih['year'] != 2003) | nih['funding_dollars_5'].notna()]
-# 204 observations for 2003
+# %%
+###### Merge BDS Economics Outcomes #######
+bds = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa.csv")
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih = nih[nih['year'] != 2024] # BDS goes up to 2023
+bds = bds.rename(columns={'msa': 'CBSA_code'})
+nih_merge = nih.merge(
+    bds,
+    "left",
+    on=['CBSA_code', 'year'],
+    indicator=True
+)
+print(nih_merge['_merge'].value_counts())
+nih_merge.to_csv(base_path / "Data/NIH_v3/nih_all_outcomes.csv", index=False)
 
-nih.loc[nih['year'] == 2003, 'log_98_03'] = (nih['funding_log'] - nih['funding_log_5'])
-
-nih.loc[nih['year'] == 2003, 'percap_98_03'] = (nih['funding_dollars_percap'] - nih['funding_dollars_percap_5'])
-nih['percap_98_03'] = nih.groupby('CBSA_code')['percap_98_03'].transform('first')
-nih.to_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
-
-
+# unmatched are some MSAs: 
+# Anderson, SC; Bloomington-Normal, IL; Cleveland-Elyria-Mentor, OH; Dayton, OH; Honolulu, HI; Lafayette, IN
+# Los Angeles, CA; Poughkeepsie-Newburgh-Middletown, NY; Santa Barbara-Santa Maria-Goleta, CA; 
+# %%

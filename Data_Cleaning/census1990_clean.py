@@ -97,5 +97,8 @@ census_msa = census_msa[['CBSA_code', 'CBSA_title', 'total_pop',
        'share_college', 'share_gradschool', 'share_health_indus',
        'share_educ_indus', 'log_pop']]
 census_msa.to_csv(base_path / "Data/Census/census_1990_v2/census1990_msa.csv", index=False)
+census_msa.to_csv(base_path / "Data/NIH_v3/census1990_msa.csv", index=False)
 
 # now this is 1990 census info ready to merge with NIH data
+
+
