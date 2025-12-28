@@ -79,14 +79,14 @@ nih_dept_full["CBSA_code"] = nih_dept_full["CBSA_code"].astype(str)
 # Merge in CBSA_code-year total funding
 nih_funding = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
 nih_funding["CBSA_code"] = nih_funding["CBSA_code"].astype(str)
-nih_dept_full = nih_dept_full.merge(
-    nih_funding,
-    "left",
-    on=['CBSA_code', 'year']
-)
-nih_dept_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_field.csv", index=False)
-nih_dept_full['funding'] = nih_dept_full['funding'].replace(0, 1)
-nih_dept_full['share_field'] = nih_dept_full['funding_field'] / nih_dept_full['funding']
+# nih_dept_full = nih_dept_full.merge(
+#     nih_funding,
+#     "left",
+#     on=['CBSA_code', 'year']
+# )
+# nih_dept_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_field.csv", index=False)
+# nih_dept_full['funding'] = nih_dept_full['funding'].replace(0, 1)
+# nih_dept_full['share_field'] = nih_dept_full['funding_field'] / nih_dept_full['funding']
 
 # keep only science fields
 excluded = ["", "NONE", "NO CODE ASSIGNED", "MISCELLANEOUS"]
@@ -113,9 +113,7 @@ nih_dept_coded = nih_dept_coded.merge(
 nih_dept_coded["funding_fields_total"] = nih_dept_coded["funding_fields_total"].replace(0, 1)
 
 # Share among coded fields only
-nih_dept_coded["share_field_coded"] = (
-    nih_dept_coded["funding_field"] / nih_dept_coded["funding_fields_total"]
-)
+nih_dept_coded["share_field_coded"] = (nih_dept_coded["funding_field"] / nih_dept_coded["funding_fields_total"])
 
 # save wide format
 nih_by_field_wide = (
@@ -128,62 +126,20 @@ nih_by_field_wide = (
     .reset_index()
 )
 nih_by_field_wide.columns.name = None
-nih_by_field_wide.to_csv(base_path / "Data/NIH_v3/nih_funding_field_shares.csv", index=False)
 
-# #%%
-# # Also make a measurement that is share of the total department funding noted (excluding empty departments: '', 'NONE', 'NO CODE ASSIGNED')
-# excluded_totals = (
-#     nih_dept_full.loc[nih_dept_full["org_dept"].isin(["", "NONE", "NO CODE ASSIGNED", "MISCELLANEOUS"])]
-#     .groupby(["CBSA_code", "year"], as_index=False)["funding_field"]
-#     .sum()
-#     .rename(columns={"funding_field": "excluded_field_funding"})
-# )
-# # Merge excluded totals back in
-# nih_dept_full = nih_dept_full.merge(excluded_totals, on=["CBSA_code", "year"], how="left")
-
-# # If a CBSA-year has no excluded categories, excluded_field_funding will be NaN -> treat as 0
-# nih_dept_full["excluded_field_funding"] = nih_dept_full["excluded_field_funding"].fillna(0)
-
-# # Denominator
-# nih_dept_full["funding_fields_total"] = nih_dept_full["funding"] - nih_dept_full["excluded_field_funding"]
-# nih_dept_full["funding_fields_total"] = nih_dept_full["funding_fields_total"].replace(0, 1)
-
-# # Share among coded fields only
-# nih_dept_full["share_field_coded"] = nih_dept_full["funding_field"] / nih_dept_full["funding_fields_total"]
-
-# # Set excluded ones to Nan
-# nih_dept_full.loc[nih_dept_full["org_dept"].isin(["", "NONE", "NO CODE ASSIGNED", "MISCELLANEOUS"]), "share_field_coded_only"] = pd.NA
-
-# nih_dept_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_field.csv", index=False)
-
-# # Optional: wide format (one column per org_dept)
-# nih_by_field_wide = (
-#     nih_dept_full.pivot_table(
-#         index=["CBSA_code", "year"],
-#         columns="org_dept",
-#         values="share_field_coded",
-#         fill_value=0
-#     )
-#     .reset_index()
-# )
-# nih_by_field_wide.columns.name = None
-# nih_by_field_wide.to_csv(base_path / "Data/NIH_v3/nih_funding_field_shares.csv", index=False)
-
-
-#%%
-# append a full share sum
-nih_dept_total = nih_dept_full.groupby(['CBSA_code', 'year'])['share_field'].sum().reset_index()
-
-# pivot into each row is by CBSA_code and year
-nih_share_dept = nih_dept_full.pivot(index=['CBSA_code', 'year'], columns='org_dept', values='share_mech').reset_index()
-nih_share_dept['total_share_mech'] = nih_dept_total['share_mech']
-nih_share_dept.columns.name = None
-
+# add total share
+dept_cols = [
+    c for c in nih_by_field_wide.columns
+    if c not in ["CBSA_code", "year"]
+]
+nih_by_field_wide["total_share_field_coded"] = nih_by_field_wide[dept_cols].sum(axis=1)
+# %%
 # Append to CBSA_code
 nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
 nih_msa["CBSA_code"] = nih_msa["CBSA_code"].astype(str)
+nih_by_field_wide["CBSA_code"] = nih_by_field_wide["CBSA_code"].astype(str)
 nih_msa_dept = nih_msa.merge(
-    nih_share_dept,
+    nih_by_field_wide,
     "left",
     on=['CBSA_code', 'year'],
     indicator=True
@@ -265,6 +221,19 @@ print(nih_msa_mech['_merge'].value_counts())
 nih_msa_mech = nih_msa_mech.drop(columns=['_merge'])
 nih_msa_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
 
+
+#%%
+########### Merge share of mech and funding together (?) ###############
+
+
+#%%
+########### Making funding variables ###############
+nih_by_msa = nih_by_msa[nih_by_msa['funding_dollars'] != 0]
+nih_by_msa['funding_dollars_percap'] = nih_by_msa['funding_dollars'] / nih_by_msa['total_pop'] 
+nih_by_msa['funding_log_dollars'] = np.log(nih_by_msa['funding_dollars'])
+nih_by_msa['funding_log_percap'] = np.log(nih_by_msa['funding_dollars_percap'])
+
+
 #%%
 ########### Funding Lags ###############
 
@@ -285,3 +254,5 @@ nih.loc[nih['year'] == 2003, 'log_98_03'] = (nih['funding_log'] - nih['funding_l
 nih.loc[nih['year'] == 2003, 'percap_98_03'] = (nih['funding_dollars_percap'] - nih['funding_dollars_percap_5'])
 nih['percap_98_03'] = nih.groupby('CBSA_code')['percap_98_03'].transform('first')
 nih.to_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
+
+
