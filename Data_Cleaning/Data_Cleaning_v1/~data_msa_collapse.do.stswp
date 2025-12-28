@@ -228,9 +228,17 @@ drop _m
 
 save "`path'/Data/nih_cbsa.dta", replace
 
-*** TO-DO: Fix unmatched (esp. Bar Harbor Maine)
+*** Do not need to add in unmatched, because those are counties not part of MSAs
 
 
+***************************************************************
+	*** Adjust for inflation on the individual grants
+***************************************************************
+
+
+***************************************************************
+	*** Collapsing
+***************************************************************
 use "`path'/Data/nih_cbsa.dta", clear
 keep if CBSA_level_id == "1"
 collapse (sum) FUNDING, by(CBSA_code CBSA_title year)
@@ -296,7 +304,20 @@ merge m:1 msa using "`path'/Data/cbsa_pop_2000-2005.dta"
 	
 	
 ************************************************************
-	*** DRO
+	*** DROP 2025 -- dropped year == 2025 for us, county, and cbsa file
 ************************************************************
 	
-log close
+***********
+* Check if 2009 county sort crosswalk is same as CBSA downloaded version
+***********
+clear
+import excel "`path'/Data/Crosswalks/county_cbsa_xwalk_2009.xlsx", firstrow
+save "`path'/Data/Crosswalks/county_cbsa_2009.dta", replace
+
+import delimited "`path'/Data/Crosswalks/county_2009_sort.csv", clear
+drop v1
+rename cnty county_fips
+tostring county_fips, replace
+merge 1:m county_fips using "`path'/Data/Crosswalks/county_cbsa_2009.dta", force
+
+

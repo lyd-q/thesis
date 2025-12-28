@@ -32,6 +32,12 @@ Bartik Shift Share
 
 ### Documentation: Relevant Data Files ###
 NIH:
+    * Data/nih_US.dta = NIH grants in US states, raw
+    * Data/nih_county.dta = NIH grants with counties merged 1992-2024, manual county matches added
+    * Data/nih_cbsa.dta = US NIH grants with MSA merged, before collapse
+
+    * Data/NIH_v2/nih_msa.dta = grants with org_dept (field) and (congressional district) added
+
 
 Census:
 
