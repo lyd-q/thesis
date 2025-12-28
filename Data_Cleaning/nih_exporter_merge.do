@@ -1,7 +1,10 @@
 
 local path "/Users/lydia/Desktop/Thesis"
 
-use "`path'/Data/nih_counties.dta", clear
+
+
+
+use "`path'/Data/Working/nih_counties.dta", clear
 rename county cnty
 rename state st
 * fix Rockville, MD
@@ -98,28 +101,3 @@ duplicates drop PROJECTNUMBER org_name, force //only applies to one observation 
 rename org_name ORGANIZATIONNAME
 save "`path'/Data/NIH_v2/nih_DUN.dta", replace
 
-***************************************************
-	*** Merge fields and district with NIH Grants
-***************************************************
-* drop some variables for clarity
-use "`path'/Data/NIH_v2/nih_cbsa.dta", clear
-drop ATTRIBUTEDTOMEDICALSCHOOL MEDICALSCHOOLLOCATION
-
-* Merge Department (Science Field)
-use "`path'/Data/NIH_v2/nih_cbsa.dta", clear
-merge m:1 PROJECTNUMBER using "`path'/Data/NIH_v2/nih_departments.dta"
-keep if _m != 2
-drop _m
-save "`path'/Data/NIH_v2/nih_msa.dta", replace
-// count if org_dept == "" --> 455,647
-// count if org_dept == "NONE" --> 60,340
-
-
-* Merge Dun and Bradstreet number
-use "`path'/Data/NIH_v2/nih_msa.dta", clear
-merge m:1 PROJECTNUMBER ORGANIZATIONNAME using "`path'/Data/NIH_v2/nih_DUN.dta"
-keep if _m != 2
-drop _m
-save "`path'/Data/NIH_v2/nih_msa.dta", replace
-// count if org_duns == "" --> 400,943
- 
