@@ -330,6 +330,71 @@ nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
 nih["CBSA_title_abbrev"] = nih["CBSA_title"].apply(shorten_cbsa_name)
 nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
+#%%
+########### Further edits ########
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih = nih.drop(columns=['total_income_imputed'])
+nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+
+#%%
+################### Aggregate science fields into bins ###################
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+field_bins = {
+    "admin": ["ADMINISTRATION"],
+    "basic_science": [
+        "ANATOMY/CELL BIOLOGY", "BIOCHEMISTRY", "BIOLOGY", "BIOPHYSICS", "GENETICS",
+        "MICROBIOLOGY/IMMUN/VIROLOGY", "PHYSIOLOGY", "ZOOLOGY", "CHEMISTRY", "PHYSICS",
+        "PHARMACOLOGY", "NEUROSCIENCES", "OTHER BASIC SCIENCES"
+    ],
+    "engineering": ["BIOMEDICAL ENGINEERING", "ENGINEERING (ALL TYPES)"],
+    "medicine": [
+        "ANESTHESIOLOGY", "DERMATOLOGY", "EMERGENCY MEDICINE", "FAMILY MEDICINE",
+        "INTERNAL MEDICINE/MEDICINE", "PEDIATRICS", "OBSTETRICS & GYNECOLOGY",
+        "OPHTHALMOLOGY", "OTOLARYNGOLOGY", "PATHOLOGY", "PHYSICAL MEDICINE & REHAB",
+        "RADIATION-DIAGNOSTIC/ONCOLOGY", "SURGERY", "NEUROSURGERY", "ORTHOPEDICS", 
+        "PLASTIC SURGERY", "UROLOGY", "DENTISTRY", "NEUROLOGY", "PSYCHIATRY",
+        "OTHER CLINICAL SCIENCES"
+    ],
+    "pop_behave_science": [
+        "PUBLIC HEALTH & PREV MEDICINE", "BIOSTATISTICS & OTHER MATH SCI",
+        "SOCIAL SCIENCES", "PSYCHOLOGY", "NUTRITION", 
+        "OTHER HEALTH PROFESSIONS", "VETERINARY SCIENCES"
+    ]
+}
+
+for bin_name, cols in field_bins.items():
+    nih[f"field_{bin_name}"] = nih[cols].sum(axis=1)
+nih.head()
+nih.columns
+
+nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+
+#%%
+################### Aggregate science fields into bins ###################
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+mech_bins = {
+    "research": ["Research Grants", "RPGs - Non SBIR/STTR", "RPGs - SBIR/STTR"],
+    "infrastructure": ["Research Centers", "Construction"],
+    "training": ["Training - Individual", "Training - Institutional"],
+    "contracts": ["R&D Contracts"],
+    "other": ["Other Research-Related"],
+}
+for bin_name, cols in mech_bins.items():
+    nih[f"mech_{bin_name}"] = nih[cols].sum(axis=1)
+nih.head()
+nih.columns
+nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
+
+#%%
+################### Make version that only keeps aggregated bins ###################
+
+field_cols = [c for cols in field_bins.values() for c in cols]
+mech_cols = [c for cols in mech_bins.values() for c in cols]
+nih_abbrev = nih.drop(columns=field_cols+mech_cols)
+nih_abbrev.to_csv(base_path / "Data/NIH_v3/nih_use.csv", index=False)
+
 # %%
 ###### Merge BDS Economics Outcomes #######
 bds = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa.csv")

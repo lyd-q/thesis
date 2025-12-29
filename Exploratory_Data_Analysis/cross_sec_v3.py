@@ -7,9 +7,9 @@ import statsmodels.api as sm
 base_path = Path(__file__).resolve().parent.parent.parent
 
 # %% ################## Get File of Only 1998-2003 ###################
-nih_all = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih_all = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
 nih = nih_all[nih_all['year'] == 1998].copy()
-nih.to_csv(base_path / "Data/NIH_v3/cross_sec/nih_use.csv", index=False)
+nih.to_csv(base_path / "Data/NIH_v3/cross_sec/nih_1998.csv", index=False)
 
 # %%
 ################## Mean Reversion - Log ###################
