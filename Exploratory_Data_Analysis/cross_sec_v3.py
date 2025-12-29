@@ -116,13 +116,13 @@ plt.show()
 # %% 
 ################### Regressions - log growth ###################
 #### Adjust variable ###
-x_var = 'PUBLIC HEALTH & PREV MEDICINE'
+x_var = 'BIOLOGY'
 
 # nih_set = nih.copy()
-# nih_set = nih.nlargest(100, 'funding_pc_1998')
-# nih_set = nih.nlargest(50, 'total_pop')
+# nih_set = nih.nlargest(50, 'funding_pc_1998')
+nih_set = nih.nlargest(50, 'total_pop')
 # nih_set = nih.nsmallest(100, 'funding_pc_1998')
-nih_set = nih.nsmallest(50, 'total_pop')
+# nih_set = nih.nsmallest(50, 'total_pop')
 
 y = nih_set['log_98_03']
 x = nih_set[x_var]
@@ -152,26 +152,26 @@ plt.plot(nih_set[x_var], y_pred, color='red', label="OLS fit")
 plt.legend()
 plt.xlabel(x_var)
 plt.ylabel("log_98_03")
-x_var = 'public_health'
+x_var = 'biology'
 plt.title(f"Log Growth and {x_var}")
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_log_full.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top100funding.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top50funding.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top50pop.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom100funding.png", bbox_inches="tight")
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom50pop.png", bbox_inches="tight")
 plt.show()
 
 # %% 
 ################### Regressions - levels growth ###################
 ### Adjust variable ###
-x_var = 'PUBLIC HEALTH & PREV MEDICINE'
+x_var = 'BIOLOGY'
 
-nih_set = nih.copy()
+# nih_set = nih.copy()
 # nih_set = nih.nlargest(50, 'funding_pc_1998')
-# nih_set = nih.nlargest(100, 'total_pop')
-# nih_set = nih.nsmallest(100, 'funding_pc_1998')
-# nih_set = nih.nsmallest(50, 'total_pop')
+nih_set = nih.nlargest(50, 'total_pop')
+# nih_set = nih.nsmallest(50, 'funding_pc_1998')
+# nih_set = nih.nsmallest(100, 'total_pop')
 
 y = nih_set['percap_98_03']
 x = nih_set[x_var]
@@ -201,56 +201,107 @@ plt.plot(nih_set[x_var], y_pred, color='red', label="OLS fit")
 plt.legend()
 plt.xlabel(x_var)
 plt.ylabel("percap_98_03")
-x_var = 'public_health'
-plt.title(f"Levels Growth and {x_var}")
+x_var = 'biology'
+plt.title(f"Level Change and {x_var}")
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_level_full.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_top50funding.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_top100pop.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom100funding.png", bbox_inches="tight")
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom50pop.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_top50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom50funding.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom100pop.png", bbox_inches="tight")
 plt.show()
 
 
 # %% 
 ################### With Controls - log growth ###################
  ### Adjust variable ###
-x_var = 'share_educ_indus'
+x_var = 'BIOLOGY'
 
-# Get data
-nih = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_updated.csv")
-nih = nih[nih['year'] == 1998]
-nih = nih.dropna(subset=['log_98_03'])
+# nih_set = nih.copy()
+# nih_set = nih.nlargest(50, 'funding_pc_1998')
+nih_set = nih.nlargest(50, 'total_pop')
+# nih_set = nih.nsmallest(50, 'funding_pc_1998')
+# nih_set = nih.nsmallest(50, 'total_pop')
 
- ### Full Dataset Version ###
-y = nih['log_98_03']
-x = nih[[x_var, 'funding_log_percap']]
-nih_reg = nih
+y = nih_set['log_98_03']
+x = nih_set[[x_var, 'log_funding_pc_1998']]
 
 x = sm.add_constant(x)
 model = sm.OLS(y, x).fit(cov_type='HC1')
 print(model.summary(title="Funding Growth (1998–2003) by MSA"))
 
-nih["resid_log"] = model.resid
-nih_reg_sorted = nih.sort_values(x_var)
-plt.scatter(nih_reg_sorted[x_var], nih_reg_sorted["resid_log"], alpha=0)
+nih_set["resid_log"] = model.resid
+plt.scatter(nih_set[x_var], nih_set["resid_log"], alpha=0)
 
-for r in nih_reg_sorted.itertuples(index=False):
-    if r.CBSA_title_abbrev:
+for _, row in nih_set.iterrows():
+    if row["CBSA_title_abbrev"]:
         plt.text(
-            getattr(r, x_var),
-            r.resid_log,
-            r.CBSA_title_abbrev,
+            row[x_var],
+            row["resid_log"],
+            row["CBSA_title_abbrev"],
             fontsize=6,
             alpha=0.7,
             ha="center",
             va="center"
         )
 
-plt.axhline(0, color="red", linewidth=1)
+plt.axhline(0, color="blue", linewidth=1)
 
 plt.xlabel(x_var)
 plt.ylabel("Residual (log_98_03)")
+x_var = 'biology'
 plt.title(f"Residualized log growth vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
-plt.savefig(base_path / f"Outputs/Explore_Reg_Full/log_control/log_control_full_{x_var}.png", bbox_inches="tight")
+
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_logcontrol_full.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_top50funding.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_top50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_bottom50funding.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_bottom50pop.png", bbox_inches="tight")
 plt.show()
+
+# %% 
+################### With Controls - levels growth ###################
+ ### Adjust variable ###
+x_var = 'BIOLOGY'
+
+# nih_set = nih.copy()
+nih_set = nih.nlargest(50, 'funding_pc_1998')
+# nih_set = nih.nlargest(50, 'total_pop')
+# nih_set = nih.nsmallest(50, 'funding_pc_1998')
+# nih_set = nih.nsmallest(50, 'total_pop')
+
+y = nih_set['percap_98_03']
+x = nih_set[[x_var, 'funding_pc_1998']]
+
+x = sm.add_constant(x)
+model = sm.OLS(y, x).fit(cov_type='HC1')
+print(model.summary(title="Funding Growth (1998–2003) by MSA"))
+
+nih_set["resid_percap"] = model.resid
+plt.scatter(nih_set[x_var], nih_set["resid_percap"], alpha=0)
+
+for _, row in nih_set.iterrows():
+    if row["CBSA_title_abbrev"]:
+        plt.text(
+            row[x_var],
+            row["resid_percap"],
+            row["CBSA_title_abbrev"],
+            fontsize=6,
+            alpha=0.7,
+            ha="center",
+            va="center"
+        )
+plt.axhline(0, color="blue", linewidth=1)
+plt.xlabel(x_var)
+plt.ylabel("Residual (percap_98_03)")
+
+x_var = 'biology'
+plt.title(f"Residualized level change vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
+
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_levelscontrol_full.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50funding.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_bottom50funding.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_bottom50pop.png", bbox_inches="tight")
+plt.show()
+# %%
