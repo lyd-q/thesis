@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+base_path = "/Users/lydia/Desktop/Thesis"
 
 ########### Get NIH complete grants from Stata #############
 #%%
-base_path = "/Users/lydia/Desktop/Thesis"
 nih = pd.read_stata(f"{base_path}/Data/NIH_v3/nih_cbsa_msa.dta")
 nih.head()
 
@@ -217,42 +217,6 @@ nih_msa_mech = nih_msa.merge(
 print(nih_msa_mech['_merge'].value_counts())
 nih_msa_mech = nih_msa_mech.drop(columns=['_merge'])
 nih_msa_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
-# %% #################
-# For each CBSA_code and year, calculate share of total funding that is in each
-# Merge in CBSA_code-year total funding
-# nih_funding = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
-# nih_funding["CBSA_code"] = nih_funding["CBSA_code"].astype(str)
-# nih_mech_full = nih_mech_full.merge(
-#     nih_funding,
-#     "left",
-#     on=['CBSA_code', 'year']
-# )
-# nih_mech_full.to_csv(base_path / "Data/Cleaned/funding_mech/nih_by_mech.csv", index=False)
-# nih_mech_full['funding'] = nih_mech_full['funding'].replace(0, 1)
-# nih_mech_full['share_mech'] = nih_mech_full['funding_mech'] / nih_mech_full['funding']
-
-# # append a full share sum
-# nih_mech_total = nih_mech_full.groupby(['CBSA_code', 'year'])['share_mech'].sum().reset_index()
-
-# # pivot into each row is by CBSA_code and year
-# nih_share_mech = nih_mech_full.pivot(index=['CBSA_code', 'year'], columns='FUNDINGMECHANISM', values='share_mech').reset_index()
-# nih_share_mech['total_share_mech'] = nih_mech_total['share_mech']
-# nih_share_mech.columns.name = None
-# nih_share_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
-
-# # Append to CBSA_code
-# nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_funding.csv")
-# nih_msa["CBSA_code"] = nih_msa["CBSA_code"].astype(str)
-# nih_msa_mech = nih_msa.merge(
-#     nih_share_mech,
-#     "left",
-#     on=['CBSA_code', 'year'],
-#     indicator=True
-# )
-# print(nih_msa_mech['_merge'].value_counts())
-# nih_msa_mech = nih_msa_mech.drop(columns=['_merge'])
-# nih_msa_mech.to_csv(base_path / "Data/NIH_v3/nih_funding_mech.csv", index=False)
-
 
 
 #%%
@@ -356,36 +320,14 @@ nih_merge = nih_merge.drop(columns=['_merge'])
 nih_merge.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
 #%%
-########### Funding Lags ###############
-# SHIFT IS WRONG, need to do differently
-# nih_msa = pd.read_csv(base_path / "Data/NIH_v3/nih_working.csv")
-# for lag in range(1, 6):
-#     nih_msa['funding_pc'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['funding_pc'].shift(lag)
-#     nih_msa['log_funding'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['log_funding'].shift(lag)
-#     nih_msa['log_funding_pc'+f"_{lag}"] = nih_msa.groupby('CBSA_code')['log_funding_pc'].shift(lag)
-
-# # create log(f2003) - log(f1998)
-# # Make sure that we have 1998 and 2003 observations
-# nih_msa = nih_msa[(nih_msa['year'] != 2003) | nih_msa['funding_pc_5'].notna()]
-# # 204 observations for 2003
-
-# nih_msa.loc[nih_msa['year'] == 2003, 'log_98_03'] = (nih_msa['log_funding'] - nih_msa['log_funding_5'])
-# nih_msa['log_98_03'] = nih_msa.groupby('CBSA_code')['log_98_03'].transform('first')
-
-# # Change in dollars per capita
-# nih_msa.loc[nih_msa['year'] == 2003, 'percap_98_03'] = (nih_msa['funding_pc'] - nih_msa['funding_pc_5'])
-# nih_msa['percap_98_03'] = nih_msa.groupby('CBSA_code')['percap_98_03'].transform('first')
-# nih_msa.to_csv(base_path / "Data/NIH_v3/nih_all_lags.csv", index=False)
-
-# ### Kept "Data/NIH_v3/nih_all_lags.csv" with all the 5 year lags.
-# ### Otherwise, only keep growth and 1 year lags
-# var_drop = ['Unnamed: 0', 'funding_pc_2',	'log_funding_2', 'log_funding_pc_2', 
-#             'funding_pc_3', 'log_funding_3', 'log_funding_pc_3', 
-#             'funding_pc_4', 'log_funding_4', 'log_funding_pc_4', 
-#             'funding_pc_5', 'log_funding_5', 'log_funding_pc_5']
-# nih_msa = nih_msa.drop(columns = var_drop)
-# nih_msa.to_csv(base_path / "Data/NIH_v3/nih_working.csv", index=False)
-
+########### Add abbreviated CBSA to prepare for graphing ########
+def shorten_cbsa_name(name):
+    city_part, state_part = name.split(", ")
+    first_city = city_part.split("-")[0]
+    return f"{first_city}, {state_part}"
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih["CBSA_title_abbrev"] = nih["CBSA_title"].apply(shorten_cbsa_name)
+nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
 # %%
 ###### Merge BDS Economics Outcomes #######
