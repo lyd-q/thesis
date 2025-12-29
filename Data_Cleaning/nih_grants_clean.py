@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-base_path = "/Users/lydia/Desktop/Thesis"
 
 ########### Get NIH complete grants from Stata #############
 #%%
+base_path = "/Users/lydia/Desktop/Thesis"
 nih = pd.read_stata(f"{base_path}/Data/NIH_v3/nih_cbsa_msa.dta")
 nih.head()
 
@@ -321,6 +321,7 @@ nih_merge.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
 #%%
 ########### Add abbreviated CBSA to prepare for graphing ########
+base_path = Path(__file__).resolve().parent.parent.parent
 def shorten_cbsa_name(name):
     city_part, state_part = name.split(", ")
     first_city = city_part.split("-")[0]
