@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+base_path = Path(__file__).resolve().parent.parent.parent
 
 ########### Get NIH complete grants from Stata #############
 #%%
@@ -242,9 +243,6 @@ nih_msa['funding_pc'] = nih_msa['funding'] / nih_msa['total_pop']
 nih_msa['log_funding_pc'] = np.log(nih_msa['funding_pc'])
 nih_msa.to_csv(base_path / "Data/NIH_v3/nih_working.csv", index='False')
 
-
-
-
 #%%
 ########### Merge in share of mech and funding ###############
 nih_working = pd.read_csv(base_path / "Data/NIH_v3/nih_working.csv")
@@ -336,10 +334,8 @@ nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
 nih = nih.drop(columns=['total_income_imputed'])
 nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
-
-#%%
-################### Aggregate science fields into bins ###################
-nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+#%% 
+########### Fields and mechanisms ########
 field_bins = {
     "admin": ["ADMINISTRATION"],
     "basic_science": [
@@ -362,6 +358,16 @@ field_bins = {
         "OTHER HEALTH PROFESSIONS", "VETERINARY SCIENCES"
     ]
 }
+mech_bins = {
+    "research": ["Research Grants", "RPGs - Non SBIR/STTR", "RPGs - SBIR/STTR"],
+    "infrastructure": ["Research Centers", "Construction"],
+    "training": ["Training - Individual", "Training - Institutional"],
+    "contracts": ["R&D Contracts"],
+    "other": ["Other Research-Related"],
+}
+#%%
+################### Aggregate science fields into bins ###################
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
 
 for bin_name, cols in field_bins.items():
     nih[f"field_{bin_name}"] = nih[cols].sum(axis=1)
@@ -374,19 +380,19 @@ nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 #%%
 ################### Aggregate science fields into bins ###################
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
-mech_bins = {
-    "research": ["Research Grants", "RPGs - Non SBIR/STTR", "RPGs - SBIR/STTR"],
-    "infrastructure": ["Research Centers", "Construction"],
-    "training": ["Training - Individual", "Training - Institutional"],
-    "contracts": ["R&D Contracts"],
-    "other": ["Other Research-Related"],
-}
+
 for bin_name, cols in mech_bins.items():
     nih[f"mech_{bin_name}"] = nih[cols].sum(axis=1)
 nih.head()
 nih.columns
 nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
+#%%
+### Add relative (percent) change ###
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih['rel_98_03'] = nih['percap_98_03'] / nih['funding_pc_1998']
+nih.head()
+nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 #%%
 ################### Make version that only keeps aggregated bins ###################
 
@@ -397,7 +403,7 @@ nih_abbrev.to_csv(base_path / "Data/NIH_v3/nih_use.csv", index=False)
 
 # %%
 ###### Merge BDS Economics Outcomes #######
-bds = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa.csv")
+bds = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa.csv", low_memory=False)
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
 nih = nih[nih['year'] != 2024] # BDS goes up to 2023
 bds = bds.rename(columns={'msa': 'CBSA_code'})

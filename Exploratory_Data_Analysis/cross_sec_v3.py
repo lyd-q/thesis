@@ -88,40 +88,26 @@ plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/mean_reversion/mean_rev_lev
 plt.show()
 
 # ['CBSA_code', 'CBSA_title', 'year', 'funding_nominal', 'funding',
-#        'log_funding', 'total_pop', 'total_income_imputed', 'income_per_cap',
-#        'share_college', 'share_gradschool', 'share_health_indus',
-#        'share_educ_indus', 'log_pop', 'funding_pc', 'log_funding_pc',
-#        'ADMINISTRATION', 'ANATOMY/CELL BIOLOGY', 'ANESTHESIOLOGY',
-#        'BIOCHEMISTRY', 'BIOLOGY', 'BIOMEDICAL ENGINEERING', 'BIOPHYSICS',
-#        'BIOSTATISTICS & OTHER MATH SCI', 'CHEMISTRY', 'DENTISTRY',
-#        'DERMATOLOGY', 'EMERGENCY MEDICINE', 'ENGINEERING (ALL TYPES)',
-#        'FAMILY MEDICINE', 'GENETICS', 'INTERNAL MEDICINE/MEDICINE',
-#        'MICROBIOLOGY/IMMUN/VIROLOGY', 'NEUROLOGY', 'NEUROSCIENCES',
-#        'NEUROSURGERY', 'NUTRITION', 'OBSTETRICS & GYNECOLOGY', 'OPHTHALMOLOGY',
-#        'ORTHOPEDICS', 'OTHER BASIC SCIENCES', 'OTHER CLINICAL SCIENCES',
-#        'OTHER HEALTH PROFESSIONS', 'OTOLARYNGOLOGY', 'PATHOLOGY', 'PEDIATRICS',
-#        'PHARMACOLOGY', 'PHYSICAL MEDICINE & REHAB', 'PHYSICS', 'PHYSIOLOGY',
-#        'PLASTIC SURGERY', 'PSYCHIATRY', 'PSYCHOLOGY',
-#        'PUBLIC HEALTH & PREV MEDICINE', 'RADIATION-DIAGNOSTIC/ONCOLOGY',
-#        'SOCIAL SCIENCES', 'SURGERY', 'UROLOGY', 'VETERINARY SCIENCES',
-#        'ZOOLOGY', 'total_share_field', 'Construction',
-#        'Other Research-Related', 'R&D Contracts', 'RPGs - Non SBIR/STTR',
-#        'RPGs - SBIR/STTR', 'Research Centers', 'Research Grants',
-#        'Training - Individual', 'Training - Institutional', 'total_share_mech',
+#        'log_funding', 'total_pop', 'income_per_cap', 'share_college',
+#        'share_gradschool', 'share_health_indus', 'share_educ_indus', 'log_pop',
+#        'funding_pc', 'log_funding_pc', 'total_share_field', 'total_share_mech',
 #        'funding_1997', 'funding_1998', 'funding_2003', 'funding_pc_1997',
 #        'funding_pc_1998', 'funding_pc_2003', 'log_funding_1997',
 #        'log_funding_1998', 'log_funding_2003', 'log_funding_pc_1997',
 #        'log_funding_pc_1998', 'log_funding_pc_2003', 'log_98_03',
-#        'percap_98_03', 'CBSA_title_abbrev']
+#        'percap_98_03', 'CBSA_title_abbrev', 'field_admin',
+#        'field_basic_science', 'field_engineering', 'field_medicine',
+#        'field_pop_behave_science', 'mech_research', 'mech_infrastructure',
+#        'mech_training', 'mech_contracts', 'mech_other', 'rel_98_03']
 # %% 
 ################### Regressions - log growth ###################
 #### Adjust variable ###
-x_var = 'BIOLOGY'
+x_var = 'mech_other'
 
 # nih_set = nih.copy()
 # nih_set = nih.nlargest(50, 'funding_pc_1998')
 nih_set = nih.nlargest(50, 'total_pop')
-# nih_set = nih.nsmallest(100, 'funding_pc_1998')
+# nih_set = nih.nsmallest(50, 'funding_pc_1998')
 # nih_set = nih.nsmallest(50, 'total_pop')
 
 y = nih_set['log_98_03']
@@ -152,26 +138,14 @@ plt.plot(nih_set[x_var], y_pred, color='red', label="OLS fit")
 plt.legend()
 plt.xlabel(x_var)
 plt.ylabel("log_98_03")
-x_var = 'biology'
 plt.title(f"Log Growth and {x_var}")
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_log_full.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top50funding.png", bbox_inches="tight")
 plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_top50pop.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom100funding.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom50funding.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_log_bottom50pop.png", bbox_inches="tight")
-plt.show()
-
-# %% 
-################### Regressions - levels growth ###################
-### Adjust variable ###
-x_var = 'BIOLOGY'
-
-# nih_set = nih.copy()
-# nih_set = nih.nlargest(50, 'funding_pc_1998')
-nih_set = nih.nlargest(50, 'total_pop')
-# nih_set = nih.nsmallest(50, 'funding_pc_1998')
-# nih_set = nih.nsmallest(100, 'total_pop')
+plt.show() 
 
 y = nih_set['percap_98_03']
 x = nih_set[x_var]
@@ -201,25 +175,22 @@ plt.plot(nih_set[x_var], y_pred, color='red', label="OLS fit")
 plt.legend()
 plt.xlabel(x_var)
 plt.ylabel("percap_98_03")
-x_var = 'biology'
 plt.title(f"Level Change and {x_var}")
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_level_full.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_top50funding.png", bbox_inches="tight")
 plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_top50pop.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom50funding.png", bbox_inches="tight")
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom100pop.png", bbox_inches="tight")
-plt.show()
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_level_bottom50pop.png", bbox_inches="tight")
+plt.show() 
 
-
-# %% 
 ################### With Controls - log growth ###################
  ### Adjust variable ###
-x_var = 'BIOLOGY'
+# x_var = 'field_basic_science'
 
 # nih_set = nih.copy()
 # nih_set = nih.nlargest(50, 'funding_pc_1998')
-nih_set = nih.nlargest(50, 'total_pop')
+# nih_set = nih.nlargest(50, 'total_pop')
 # nih_set = nih.nsmallest(50, 'funding_pc_1998')
 # nih_set = nih.nsmallest(50, 'total_pop')
 
@@ -249,7 +220,6 @@ plt.axhline(0, color="blue", linewidth=1)
 
 plt.xlabel(x_var)
 plt.ylabel("Residual (log_98_03)")
-x_var = 'biology'
 plt.title(f"Residualized log growth vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_logcontrol_full.png", bbox_inches="tight")
@@ -257,18 +227,7 @@ plt.title(f"Residualized log growth vs {x_var}\n(controlling for 1998 funding)",
 plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_top50pop.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_bottom50funding.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_logcontrol_bottom50pop.png", bbox_inches="tight")
-plt.show()
-
-# %% 
-################### With Controls - levels growth ###################
- ### Adjust variable ###
-x_var = 'BIOLOGY'
-
-# nih_set = nih.copy()
-nih_set = nih.nlargest(50, 'funding_pc_1998')
-# nih_set = nih.nlargest(50, 'total_pop')
-# nih_set = nih.nsmallest(50, 'funding_pc_1998')
-# nih_set = nih.nsmallest(50, 'total_pop')
+plt.show() 
 
 y = nih_set['percap_98_03']
 x = nih_set[[x_var, 'funding_pc_1998']]
@@ -294,14 +253,12 @@ for _, row in nih_set.iterrows():
 plt.axhline(0, color="blue", linewidth=1)
 plt.xlabel(x_var)
 plt.ylabel("Residual (percap_98_03)")
-
-x_var = 'biology'
 plt.title(f"Residualized level change vs {x_var}\n(controlling for 1998 funding)", fontsize=10)
 
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Full/{x_var}_levelscontrol_full.png", bbox_inches="tight")
-plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50funding.png", bbox_inches="tight")
-# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50pop.png", bbox_inches="tight")
+# plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50funding.png", bbox_inches="tight")
+plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_top50pop.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_bottom50funding.png", bbox_inches="tight")
 # plt.savefig(base_path / f"Outputs/Explore_Reg_Subset/{x_var}_levelscontrol_bottom50pop.png", bbox_inches="tight")
-plt.show()
+plt.show() 
 # %%
