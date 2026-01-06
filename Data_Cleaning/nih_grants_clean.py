@@ -404,7 +404,7 @@ nih_abbrev.to_csv(base_path / "Data/NIH_v3/nih_use.csv", index=False)
 # %%
 ###### Merge BDS Economics Outcomes #######
 bds = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa.csv", low_memory=False)
-nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
 nih = nih[nih['year'] != 2024] # BDS goes up to 2023
 bds = bds.rename(columns={'msa': 'CBSA_code'})
 nih_merge = nih.merge(
@@ -414,7 +414,9 @@ nih_merge = nih.merge(
     indicator=True
 )
 print(nih_merge['_merge'].value_counts())
-nih_merge.to_csv(base_path / "Data/NIH_v3/nih_all_outcomes.csv", index=False)
+nih_merge = nih_merge[nih_merge['_merge'] == "both"] #193 unique CBSAs as expected
+nih_merge = nih_merge.drop(columns=['_merge'])
+nih_merge.to_csv(base_path / "Data/NIH_v3/nih_use_outcomes.csv", index=False)
 
 # unmatched are some MSAs: 
 # Anderson, SC; Bloomington-Normal, IL; Cleveland-Elyria-Mentor, OH; Dayton, OH; Honolulu, HI; Lafayette, IN
