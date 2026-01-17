@@ -44,5 +44,8 @@ nih_bins['emp_share'] = nih_bins['emp'] / nih_bins['total_pop']
 nih_bins.to_csv(base_path / "Data/NIH_v3/nih_bins.csv", index=False)
 
 # %%
+# drop the two observations that don't have bin==2
+
+
 # now that data is done, run the regressions in stata
 
