@@ -1,4 +1,6 @@
-local path "/Users/lydia/Desktop/Thesis"
+* Last updated: 11/25/2025
+
+ocal path "/Users/lydia/Desktop/Thesis"
 log using "`path'/Log/msa_descriptive.log"
 
 ***************************************************************

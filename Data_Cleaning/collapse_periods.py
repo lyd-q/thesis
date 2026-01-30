@@ -17,13 +17,15 @@ nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use_outcomes.csv")
 nih.loc[nih['year'].between(1994, 1998), 'bin'] = 0
 nih.loc[nih['year'].between(1999, 2003), 'bin'] = 1
 nih.loc[nih['year'].between(2004, 2008), 'bin'] = 2
+nih.loc[nih['year'].between(2009, 2013), 'bin'] = 3
+nih.loc[nih['year'].between(2014, 2018), 'bin'] = 4
 # %%
 nih_bins = nih.drop(columns='year')
 nih_bins = nih_bins[nih_bins['bin'].notna()]
 group_cols = ['bin', 'CBSA_code', 'CBSA_title', 'CBSA_title_abbrev']
 value_cols = nih.columns.difference(group_cols)
 nih[value_cols] = nih[value_cols].apply(pd.to_numeric, errors='coerce')
-
+nih.to_csv(base_path / "Data/NIH_v3/nih_bins_working.csv", index=False)
 # %%
 # creates binned version over averages
 nih_bins = nih_bins.groupby(group_cols, as_index=False).mean()
@@ -41,11 +43,16 @@ nih_bins = nih_bins.drop(columns=['total_share_field', 'total_share_mech',
 nih_bins['firms_pc'] = nih_bins['firms'] / nih_bins['total_pop']
 nih_bins['estabs_pc'] = nih_bins['estabs'] / nih_bins['total_pop']
 nih_bins['emp_share'] = nih_bins['emp'] / nih_bins['total_pop']
-nih_bins.to_csv(base_path / "Data/NIH_v3/nih_bins.csv", index=False)
 
 # %%
 # drop the two observations that don't have bin==2
-
+CBSA_counts = nih_bins['CBSA_code'].value_counts()
+to_drop = CBSA_counts[CBSA_counts == 2].index
+nih_bins = nih_bins[~nih_bins['CBSA_code'].isin(to_drop)]
+nih_bins.to_csv(base_path / "Data/NIH_v3/nih_bins.csv", index=False)
 
 # now that data is done, run the regressions in stata
 
+
+# %%
+# add ln of values to do elasticity regression

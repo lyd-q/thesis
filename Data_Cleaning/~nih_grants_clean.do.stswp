@@ -1,0 +1,125 @@
+
+* Last update: 12/27/2025
+
+local path "/Users/lydia/Desktop/Thesis"
+
+
+************************************************************
+	*** PLAN FOR MSA/CBSA MERGING
+************************************************************
+
+
+
+************************************************************
+	*** County to MSA with 2009 CBSA crosswalk
+************************************************************
+clear
+import excel "`path'/Data/Crosswalks/county_cbsa_xwalk_2009.xlsx", firstrow
+duplicates drop
+destring county_fips, replace
+keep if CBSA_level_id == "1"
+save "`path'/Data/Crosswalks/county_cbsa_xwalk_2009.dta", replace
+
+use "`path'/Data/Working/nih_counties.dta", clear
+
+rename county county_fips
+merge m:1 county_fips using "`path'/Data/Crosswalks/county_cbsa_xwalk_2009.dta"
+* keep unmatched
+preserve 
+	keep if _m == 1
+	save "`path'/Data/Working/county_cbsa2009_unmatched_raw.dta", replace
+	collapse (sum) FUNDING, by(state county_fips county_name)
+	keep if county_fips != .
+	gsort -FUNDING
+	save "`path'/Data/Working/county_cbsa2009_unmatched.dta", replace
+restore
+* save matched
+keep if _m == 3
+drop _m
+// 1,650,249 matched, 23,364 unmatched
+save "`path'/Data/NIH_v3/nih_cbsa.dta", replace
+
+************************************************************
+	*** County to MSA with 2009 RDC sort crosswalk
+************************************************************
+import delimited "`path'/Data/Crosswalks/county_2009_sort.csv", clear
+rename cnty county_fips
+save "`path'/Data/Crosswalks/county_2009_sort_cbsa.dta", replace
+
+use "`path'/Data/NIH_v3/nih_cbsa.dta", clear
+merge m:1 county_fips using "`path'/Data/Crosswalks/county_2009_sort_cbsa.dta", force
+// 1,637,046 matched; 15,737 of the already cbsa'd unmatched
+drop if _m == 2
+drop _m
+save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
+
+************* SCRATCH CODE - comparing RDC 2009 merge CBSA merge
+/*
+import delimited "`path'/Data/Crosswalks/county_2009_sort.csv", clear
+gen CBSA_code = pmsa
+replace CBSA_code = msa if CBSA_code == 9999
+
+gen CBSA_name = pmsan
+replace CBSA_name = msan if CBSA_name == "Non-metro"
+
+drop if CBSA_code == 9999
+keep cnty CBSA_code CBSA_name
+save "`path'/Data/Crosswalks/county_2009_sort_pmsas.dta", replace
+
+// duplicates drop CBSA_code CBSA_name, force --> 322 pmsas
+save "`path'/Data/Crosswalks/county_2009_sort_pmsas_distinct.dta", replace
+
+
+* get distinct from CBSA crosswalk
+use "`path'/Data/Crosswalks/county_cbsa_xwalk_2009.dta", clear
+keep CBSA_code CBSA_title
+duplicates drop
+sort CBSA_code
+save "`path'/Data/Crosswalks/county_cbsa_xwalk_2009_distinct.dta", replace
+*/
+
+
+***************************************************************
+	*** Adjust for inflation on the individual grants
+***************************************************************
+use "`path'/Data/NIH_v3/nih_cbsa_msa.dta", clear
+merge m:1 year using "`path'/Data/Working/cpi_annual_avg.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
+
+use "`path'/Data/NIH_v3/nih_cbsa_msa.dta", clear
+gen cpi_2000 = cpi if year == 2000
+egen base_cpi = max(cpi_2000)
+drop cpi_2000
+
+rename FUNDING funding_real
+drop if funding_real == .
+gen funding_adj = (base_cpi / cpi) * funding_real
+drop base_cpi cpi
+save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
+
+***************************************************
+	*** Merge fields and district with NIH Grants
+***************************************************
+
+* Merge Department (Science Field)
+use "`path'/Data/NIH_v3/nih_cbsa_msa.dta", clear
+merge m:1 PROJECTNUMBER using "`path'/Data/NIH_v2/nih_departments.dta"
+keep if _m != 2
+drop _m
+save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
+// count if org_dept == "" --> 450,367
+// count if org_dept == "NONE" -->  59,230
+
+
+* Merge Dun and Bradstreet number
+use "`path'/Data/NIH_v3/nih_cbsa_msa.dta", clear
+merge m:1 PROJECTNUMBER ORGANIZATIONNAME using "`path'/Data/NIH_v2/nih_DUN.dta"
+keep if _m != 2
+drop _m
+save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
+// count if org_duns == "" --> 397,175
+ 
+
+

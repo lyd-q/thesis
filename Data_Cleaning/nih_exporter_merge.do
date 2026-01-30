@@ -1,4 +1,7 @@
 
+* Last update: Dec 27, 2025
+* This uses NIH exporter data to get science fields
+
 local path "/Users/lydia/Desktop/Thesis"
 
 

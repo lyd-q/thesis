@@ -421,4 +421,124 @@ nih_merge.to_csv(base_path / "Data/NIH_v3/nih_use_outcomes.csv", index=False)
 # unmatched are some MSAs: 
 # Anderson, SC; Bloomington-Normal, IL; Cleveland-Elyria-Mentor, OH; Dayton, OH; Honolulu, HI; Lafayette, IN
 # Los Angeles, CA; Poughkeepsie-Newburgh-Middletown, NY; Santa Barbara-Santa Maria-Goleta, CA; 
-# %%
+
+# %% MORE GRANULAR BDS OUTCOME VARIABLES
+# BDS Sectors of interest: 
+# 54 - Professional, Scientific, and Technical Services
+# 61 - Educational Services
+# 62 - Health Care and Social Assistance
+
+bds_detailed = pd.read_csv(base_path / "Raw_data/BDS/bds2023_msa_sec_fzc.csv")
+bds_detailed = bds_detailed[bds_detailed["sector"].isin(["54", "61", "62"])]
+bds_detailed = bds_detailed[bds_detailed["year"] >= 1992]
+bds_detailed.to_csv(base_path / "Data/Outcomes/bds_sector_firmsize.csv", index=False)
+
+bds = pd.read_csv(base_path / "Data/Outcomes/bds_sector_firmsize.csv")
+# make bds_science, bds_educ, bds_health
+outcomes = ['firms', 'estabs', 'emp',
+       'denom', 'estabs_entry', 'estabs_entry_rate', 'estabs_exit',
+       'estabs_exit_rate', 'job_creation', 'job_creation_births',
+       'job_creation_continuers', 'job_creation_rate_births',
+       'job_creation_rate', 'job_destruction', 'job_destruction_deaths',
+       'job_destruction_continuers', 'job_destruction_rate_deaths',
+       'job_destruction_rate', 'net_job_creation', 'net_job_creation_rate',
+       'reallocation_rate', 'firmdeath_firms', 'firmdeath_estabs',
+       'firmdeath_emp']
+
+# (for now) Set "D" to 0 -- too small for disclosure
+bds = bds.replace("D", 0)
+bds = bds.replace("N", 0)
+bds['firmsize'] = ''
+
+# make wide with firm size
+# SCIENCE
+bds_science = bds[bds['sector'] == 54]
+bds_science.loc[bds_science['fsizecoarse'] == 'a) 1 to 19', 'firmsize'] = "small"
+bds_science.loc[bds_science['fsizecoarse'] == 'b) 20 to 499', 'firmsize'] = "medium"
+bds_science.loc[bds_science['fsizecoarse'] == 'c) 500+', 'firmsize'] = 'large'
+bds_science = bds_science.drop(columns="fsizecoarse")
+bds_science[outcomes] = bds_science[outcomes].apply(pd.to_numeric)
+wide = bds_science.set_index(['year','msa','sector','firmsize'])[outcomes].unstack('firmsize')
+wide.columns = [f"{m}_{s}" for (m, s) in wide.columns]   # this WILL be tuples here
+bds_science_wide = wide.reset_index()
+bds_science_wide.to_csv(base_path / "Data/Outcomes/bds_science.csv", index=False)
+
+# EDUCATION
+bds_educ = bds[bds['sector'] == 61]
+bds_educ.loc[bds_educ['fsizecoarse'] == 'a) 1 to 19', 'firmsize'] = "small"
+bds_educ.loc[bds_educ['fsizecoarse'] == 'b) 20 to 499', 'firmsize'] = "medium"
+bds_educ.loc[bds_educ['fsizecoarse'] == 'c) 500+', 'firmsize'] = 'large'
+bds_educ = bds_educ.drop(columns="fsizecoarse")
+bds_educ[outcomes] = bds_educ[outcomes].apply(pd.to_numeric)
+wide = bds_educ.set_index(['year','msa','sector','firmsize'])[outcomes].unstack('firmsize')
+wide.columns = [f"{m}_{s}" for (m, s) in wide.columns]   # this WILL be tuples here
+bds_educ_wide = wide.reset_index()
+bds_educ_wide.to_csv(base_path / "Data/Outcomes/bds_educ.csv", index=False)
+
+# HEALTH
+bds_health = bds[bds['sector'] == 62]
+bds_health.loc[bds_health['fsizecoarse'] == 'a) 1 to 19', 'firmsize'] = "small"
+bds_health.loc[bds_health['fsizecoarse'] == 'b) 20 to 499', 'firmsize'] = "medium"
+bds_health.loc[bds_health['fsizecoarse'] == 'c) 500+', 'firmsize'] = 'large'
+bds_health = bds_health.drop(columns="fsizecoarse")
+bds_health[outcomes] = bds_health[outcomes].apply(pd.to_numeric)
+wide = bds_health.set_index(['year','msa','sector','firmsize'])[outcomes].unstack('firmsize')
+wide.columns = [f"{m}_{s}" for (m, s) in wide.columns]   # this WILL be tuples here
+bds_health_wide = wide.reset_index()
+bds_health_wide.to_csv(base_path / "Data/Outcomes/bds_health.csv", index=False)
+
+# %% MORE GRANULAR BDS OUTCOME VARIABLES
+# Merge with NIH and demographics data
+
+bds_science = pd.read_csv(base_path / "Data/Outcomes/bds_science.csv")
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
+nih = nih[nih['year'] != 2024] # BDS goes up to 2023
+bds_science = bds_science.rename(columns={'msa': 'CBSA_code'})
+nih_merge = nih.merge(
+    bds_science,
+    "left",
+    on=['CBSA_code', 'year'],
+    indicator=True
+)
+print(nih_merge['_merge'].value_counts())
+
+nih_missing = nih_merge[nih_merge['_merge'] == 'left_only']
+nih_missing['CBSA_title'].unique()
+# unmatched: ['Anderson, SC', 'Bloomington-Normal, IL',
+    #    'Cleveland-Elyria-Mentor, OH', 'Dayton, OH', 'Honolulu, HI',
+    #    'Lafayette, IN', 'Los Angeles-Long Beach-Santa Ana, CA',
+    #    'Poughkeepsie-Newburgh-Middletown, NY',
+    #    'Santa Barbara-Santa Maria-Goleta, CA']
+nih_merge = nih_merge[nih_merge['_merge'] == "both"]
+nih_merge = nih_merge.drop(columns=['_merge'])
+nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_science.csv", index=False)
+
+bds_educ = pd.read_csv(base_path / "Data/Outcomes/bds_educ.csv")
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
+nih = nih[nih['year'] != 2024] # BDS goes up to 2023
+bds_educ = bds_educ.rename(columns={'msa': 'CBSA_code'})
+nih_merge = nih.merge(
+    bds_educ,
+    "left",
+    on=['CBSA_code', 'year'],
+    indicator=True
+)
+print(nih_merge['_merge'].value_counts())
+nih_merge = nih_merge[nih_merge['_merge'] == "both"]
+nih_merge = nih_merge.drop(columns=['_merge'])
+nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_educ.csv", index=False)
+
+bds_health = pd.read_csv(base_path / "Data/Outcomes/bds_health.csv")
+nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
+nih = nih[nih['year'] != 2024] # BDS goes up to 2023
+bds_health = bds_health.rename(columns={'msa': 'CBSA_code'})
+nih_merge = nih.merge(
+    bds_health,
+    "left",
+    on=['CBSA_code', 'year'],
+    indicator=True
+)
+print(nih_merge['_merge'].value_counts())
+nih_merge = nih_merge[nih_merge['_merge'] == "both"]
+nih_merge = nih_merge.drop(columns=['_merge'])
+nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_health.csv", index=False)

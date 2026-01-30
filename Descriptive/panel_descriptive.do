@@ -1,8 +1,72 @@
-
-
-
 local path "/Users/lydia/Desktop/Thesis"
 
+import delimited "`path'/Data/NIH_v3/nih_bins.csv", clear
+
+ssc install estout, replace
+*** 5-year period bins
+* nominal levels
+// xtset cbsa_code bin
+// xtreg estabs funding 1.bin#c.funding
+// xtreg estabs funding 1.bin#c.funding, fe vce(cluster cbsa_code)
+// xtreg firms funding 1.bin#c.funding
+// xtreg firms funding 1.bin#c.funding, fe vce(cluster cbsa_code)
+// xtreg emp funding 1.bin#c.funding
+// xtreg emp funding 1.bin#c.funding, fe vce(cluster cbsa_code)
+//
+// * per capita
+// xtreg estabs_pc funding_pc 1.bin#c.funding_pc
+// xtreg estabs_pc funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
+// xtreg firms_pc funding_pc 1.bin#c.funding_pc
+// xtreg firms_pc funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
+// xtreg emp_share funding_pc 1.bin#c.funding_pc
+// xtreg emp_share funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
+
+
+* simple panel
+xtset cbsa_code bin
+xtreg estabs funding, fe vce(cluster cbsa_code)
+xtreg firms funding, fe vce(cluster cbsa_code)
+xtreg emp funding, fe vce(cluster cbsa_code)
+
+destring(funding_pc), replace
+xtreg estabs_pc funding_pc, fe vce(cluster cbsa_code)
+xtreg firms_pc funding_pc, fe vce(cluster cbsa_code)
+*****
+
+import delimited "`path'/Data/NIH_v3/nih_bins.csv", clear
+xtset cbsa_code bin
+
+eststo clear
+preserve
+	keep if bin <= 2
+	eststo: xtreg emp_share funding_pc i.bin, fe vce(cluster cbsa_code)
+restore
+import delimited "`path'/Data/NIH_v3/nih_bins.csv", clear
+xtset cbsa_code bin
+eststo: xtreg emp_share funding_pc i.bin, fe vce(cluster cbsa_code)
+esttab using `path'\table.tex, label replace
+
+
+ 
+xtreg emp_share log_funding i.bin, fe vce(cluster cbsa_code)
+
+reghdfe emp_share funding_pc, absorb(cbsa_code bin) vce(cluster cbsa_code)
+
+* with bin fixed effects
+xtreg emp_share c.funding_pc##ib1.bin, fe vce(cluster cbsa_code)
+
+
+xtreg emp_share c.log_funding##ib1.bin, fe vce(cluster cbsa_code)
+
+
+
+xtreg estabs_entry_rate funding_pc i.bin, fe vce(cluster cbsa_code)
+xtreg estabs_entry_rate log_funding i.bin, fe vce(cluster cbsa_code)
+xtreg estabs_entry_rate c.funding_pc##ib1.bin, fe vce(cluster cbsa_code)
+xtreg estabs_entry_rate c.log_funding##ib1.bin, fe vce(cluster cbsa_code)
+
+	   
+/*
 import delimited "`path'/Data/NIH_v3/nih_use_outcomes.csv", clear
 
 // keep if (year >= 1997) & (year <= 2004) 
