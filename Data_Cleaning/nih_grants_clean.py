@@ -490,6 +490,7 @@ bds_health_wide.to_csv(base_path / "Data/Outcomes/bds_health.csv", index=False)
 # %% MORE GRANULAR BDS OUTCOME VARIABLES
 # Merge with NIH and demographics data
 
+# SCIENCE
 bds_science = pd.read_csv(base_path / "Data/Outcomes/bds_science.csv")
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
 nih = nih[nih['year'] != 2024] # BDS goes up to 2023
@@ -509,10 +510,30 @@ nih_missing['CBSA_title'].unique()
     #    'Lafayette, IN', 'Los Angeles-Long Beach-Santa Ana, CA',
     #    'Poughkeepsie-Newburgh-Middletown, NY',
     #    'Santa Barbara-Santa Maria-Goleta, CA']
+
 nih_merge = nih_merge[nih_merge['_merge'] == "both"]
 nih_merge = nih_merge.drop(columns=['_merge'])
+# normalize counts
+nih_merge['firms_pc_small'] = nih_merge['firms_small'] / nih_merge['total_pop']
+nih_merge['firms_pc_medium'] = nih_merge['firms_medium'] / nih_merge['total_pop']
+nih_merge['firms_pc_large'] = nih_merge['firms_large'] / nih_merge['total_pop']
+
+nih_merge['estabs_pc_small'] = nih_merge['estabs_small'] / nih_merge['total_pop']
+nih_merge['estabs_pc_medium'] = nih_merge['estabs_medium'] / nih_merge['total_pop']
+nih_merge['estabs_pc_large'] = nih_merge['estabs_large'] / nih_merge['total_pop']
+
+nih_merge['emp_pc_small'] = nih_merge['emp_small'] / nih_merge['total_pop']
+nih_merge['emp_pc_medium'] = nih_merge['emp_medium'] / nih_merge['total_pop']
+nih_merge['emp_pc_large'] = nih_merge['emp_large'] / nih_merge['total_pop']
+# Add period bins
+nih_merge.loc[nih_merge['year'].between(1994, 1998), 'bin'] = 0
+nih_merge.loc[nih_merge['year'].between(1999, 2003), 'bin'] = 1
+nih_merge.loc[nih_merge['year'].between(2004, 2008), 'bin'] = 2
+nih_merge.loc[nih_merge['year'].between(2009, 2013), 'bin'] = 3
+nih_merge.loc[nih_merge['year'].between(2014, 2018), 'bin'] = 4
 nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_science.csv", index=False)
 
+# EDUCATION
 bds_educ = pd.read_csv(base_path / "Data/Outcomes/bds_educ.csv")
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
 nih = nih[nih['year'] != 2024] # BDS goes up to 2023
@@ -526,8 +547,27 @@ nih_merge = nih.merge(
 print(nih_merge['_merge'].value_counts())
 nih_merge = nih_merge[nih_merge['_merge'] == "both"]
 nih_merge = nih_merge.drop(columns=['_merge'])
+# normalize counts
+nih_merge['firms_pc_small'] = nih_merge['firms_small'] / nih_merge['total_pop']
+nih_merge['firms_pc_medium'] = nih_merge['firms_medium'] / nih_merge['total_pop']
+nih_merge['firms_pc_large'] = nih_merge['firms_large'] / nih_merge['total_pop']
+
+nih_merge['estabs_pc_small'] = nih_merge['estabs_small'] / nih_merge['total_pop']
+nih_merge['estabs_pc_medium'] = nih_merge['estabs_medium'] / nih_merge['total_pop']
+nih_merge['estabs_pc_large'] = nih_merge['estabs_large'] / nih_merge['total_pop']
+
+nih_merge['emp_pc_small'] = nih_merge['emp_small'] / nih_merge['total_pop']
+nih_merge['emp_pc_medium'] = nih_merge['emp_medium'] / nih_merge['total_pop']
+nih_merge['emp_pc_large'] = nih_merge['emp_large'] / nih_merge['total_pop']
+# Add period bins
+nih_merge.loc[nih_merge['year'].between(1994, 1998), 'bin'] = 0
+nih_merge.loc[nih_merge['year'].between(1999, 2003), 'bin'] = 1
+nih_merge.loc[nih_merge['year'].between(2004, 2008), 'bin'] = 2
+nih_merge.loc[nih_merge['year'].between(2009, 2013), 'bin'] = 3
+nih_merge.loc[nih_merge['year'].between(2014, 2018), 'bin'] = 4
 nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_educ.csv", index=False)
 
+# HEALTH
 bds_health = pd.read_csv(base_path / "Data/Outcomes/bds_health.csv")
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use.csv")
 nih = nih[nih['year'] != 2024] # BDS goes up to 2023
@@ -541,4 +581,25 @@ nih_merge = nih.merge(
 print(nih_merge['_merge'].value_counts())
 nih_merge = nih_merge[nih_merge['_merge'] == "both"]
 nih_merge = nih_merge.drop(columns=['_merge'])
+# normalize counts
+nih_merge['firms_pc_small'] = nih_merge['firms_small'] / nih_merge['total_pop']
+nih_merge['firms_pc_medium'] = nih_merge['firms_medium'] / nih_merge['total_pop']
+nih_merge['firms_pc_large'] = nih_merge['firms_large'] / nih_merge['total_pop']
+
+nih_merge['estabs_pc_small'] = nih_merge['estabs_small'] / nih_merge['total_pop']
+nih_merge['estabs_pc_medium'] = nih_merge['estabs_medium'] / nih_merge['total_pop']
+nih_merge['estabs_pc_large'] = nih_merge['estabs_large'] / nih_merge['total_pop']
+
+nih_merge['emp_pc_small'] = nih_merge['emp_small'] / nih_merge['total_pop']
+nih_merge['emp_pc_medium'] = nih_merge['emp_medium'] / nih_merge['total_pop']
+nih_merge['emp_pc_large'] = nih_merge['emp_large'] / nih_merge['total_pop']
+# Add period bins
+nih_merge.loc[nih_merge['year'].between(1994, 1998), 'bin'] = 0
+nih_merge.loc[nih_merge['year'].between(1999, 2003), 'bin'] = 1
+nih_merge.loc[nih_merge['year'].between(2004, 2008), 'bin'] = 2
+nih_merge.loc[nih_merge['year'].between(2009, 2013), 'bin'] = 3
+nih_merge.loc[nih_merge['year'].between(2014, 2018), 'bin'] = 4
 nih_merge.to_csv(base_path / "Data/NIH_Outcomes/nih_outcomes_health.csv", index=False)
+
+
+#%% Need to make emp, firm, and estabs shares

@@ -1,4 +1,6 @@
 
+* Last update: 12/27/2025
+
 local path "/Users/lydia/Desktop/Thesis"
 
 
@@ -119,5 +121,305 @@ drop _m
 save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
 // count if org_duns == "" --> 397,175
  
+ ******************************************************************************************************
+* 2/5/26
+***************************************************
+	*** Merge BDS outcomes with grants
+***************************************************
+
+import delimited "`path'/Data/NIH_v3/nih_use.csv", clear
+save "`path'/Data/NIH_v3/nih_use.dta", replace
+
+import delimited "`path'/Raw_data/BDS/bds2023_msa.csv", clear
+save "`path'/Data/Outcomes/bds2023_msa.dta", replace
+
+use "`path'/Data/Outcomes/bds2023_msa.dta", clear
+* manually change BDS codes to match
+replace msa = 31100 if msa == 31080
+replace msa = 46520 if msa == 26180
+rename msa cbsa_code
+save "`path'/Data/Outcomes/bds2023_msa.dta", replace
 
 
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop if year == 2024
+merge 1:1 year cbsa_code using "`path'/Data/Outcomes/bds2023_msa.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+
+***************************************************
+	*** Adding annual population
+***************************************************
+use "`path'/Data/Census/population/population_msa.dta", clear
+reshape long pop, i(CBSA_code CBSA_title) j(year)
+rename CBSA_code cbsa_code
+rename CBSA_title cbsa_title
+destring cbsa_code, replace
+save "`path'/Data/Census/population/population_msa_long.dta", replace
+
+use "`path'/Data/NIH_Outcomes/nih_outcomes.dta", clear
+drop if year > 2020
+merge 1:1 cbsa_code cbsa_title year using "`path'/Data/Census/population/population_msa_long.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+
+
+*** STILL TO-DO: Redo, NEED TO IMPUTE POPULATION FOR CT OBSERVATIONS
+// Bridgeport-Stamford-Norwalk, CT
+// Hartford-West Hartford-East Hartford, CT
+// New Haven-Milford, CT
+
+
+***************************************************
+	*** Update per capita
+***************************************************
+use "`path'/Data/NIH_Outcomes/nih_outcomes.dta", clear
+drop total_pop
+replace funding_pc = funding / pop
+replace log_pop = ln(pop)
+replace log_funding_pc = log_funding / pop
+save "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+
+* other measures of share school and share industry should not be changed because the numerator is fixed at 1990 census 
+
+
+*** keep school degree and industries as counts too
+import delimited "`path'/Data/Census/census_1990_v2/census1990_msa.csv", clear
+keep cbsa_code bachelors_deg graduate_deg indus_health_services indus_educ_services
+save "`path'/Data/Census/census_1990_v2/census1990_msa.dta", replace
+
+use "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+merge m:1 cbsa_code using "`path'/Data/Census/census_1990_v2/census1990_msa.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+
+***************************************************
+** Making some changes
+
+use "`path'/Data/NIH_Outcomes/nih_outcomes.dta", clear
+destring emp, replace
+rename log_funding* ln_funding*
+rename log_pop ln_pop
+// drop funding_1997 funding_1998 funding_2003 
+// drop log_funding_1997 log_1998 log_funding_2003
+// drop log_funding_pc_1997 log_funding_pc_1998 log_funding_pc_2003
+
+gen ln_firms = ln(firms)
+gen ln_estabs = ln(estabs)
+gen ln_emp = ln(emp)
+save "`path'/Data/NIH_Outcomes/nih_outcomes.dta", replace
+
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+rename log_funding* ln_funding*
+rename log_pop ln_pop
+save "`path'/Data/NIH_v3/nih_use.dta", replace
+
+
+* 2/6/26
+******************************************************************************************************
+	*** Make updates with industry specific data
+***************************************************
+***************************************************
+	*** Adding annual population
+***************************************************
+* Add annual population
+use "`path'/Data/Census/population/population_msa.dta", clear
+reshape long pop, i(CBSA_code CBSA_title) j(year)
+rename CBSA_code cbsa_code
+rename CBSA_title cbsa_title
+destring cbsa_code, replace
+save "`path'/Data/Census/population/population_msa_long.dta", replace
+
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop if year > 2020
+merge 1:1 cbsa_code cbsa_title year using "`path'/Data/Census/population/population_msa_long.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_v3/nih_use.dta", replace
+
+
+*** STILL TO-DO: Redo, NEED TO IMPUTE POPULATION FOR CT OBSERVATIONS
+// Bridgeport-Stamford-Norwalk, CT
+// Hartford-West Hartford-East Hartford, CT
+// New Haven-Milford, CT
+
+	*** Update per capita
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop total_pop
+replace funding_pc = funding / pop
+replace ln_pop = ln(pop)
+replace ln_funding_pc = ln(funding_pc)
+save "`path'/Data/NIH_v3/nih_use.dta", replace
+
+*** keep school degree and industries as counts too
+import delimited "`path'/Data/Census/census_1990_v2/census1990_msa.csv", clear
+keep cbsa_code bachelors_deg graduate_deg indus_health_services indus_educ_services
+save "`path'/Data/Census/census_1990_v2/census1990_msa.dta", replace
+
+use "`path'/Data/NIH_v3/nih_use.dta", replace
+merge m:1 cbsa_code using "`path'/Data/Census/census_1990_v2/census1990_msa.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_v3/nih_use.dta", replace
+
+
+
+******************************************************************************************************
+	*** Get BDS without firm sizes
+import delimited "`path'/Raw_data/BDS/bds2023_msa_sec.csv", clear
+save "`path'/Data/Outcomes/sector/bds_msa_sec.dta", replace
+
+keep if year >= 1992 & year <= 2022
+keep year msa sector firms estabs emp
+replace firms = "0" if (firms == "D" | firms == "N")
+replace estabs = "0" if (estabs == "D" | estabs == "N")
+replace emp = "0" if (emp == "D" | emp == "N")
+destring firms, replace
+destring estabs, replace
+destring emp, replace
+save "`path'/Data/Outcomes/sector/bds_msa_sec.dta", replace
+
+use  "`path'/Data/Outcomes/sector/bds_msa_sec.dta", clear
+preserve 
+	keep if sector == "54"
+	drop sector
+	save "`path'/Data/Outcomes/sector/bds_science.dta", replace
+restore
+
+preserve
+	keep if sector == "61"
+	drop sector
+	save "`path'/Data/Outcomes/sector/bds_educ.dta", replace
+restore
+
+preserve
+	keep if sector == "62"
+	drop sector
+	save "`path'/Data/Outcomes/sector/bds_health.dta", replace
+restore
+
+******************************************************************************************************
+	*** Education
+***************************************************
+use "`path'/Data/Outcomes/sector/bds_educ.dta", clear
+
+/*
+gen firms = firms_large + firms_medium + firms_small
+gen estabs = estabs_large + estabs_medium + estabs_small
+gen emp = emp_large + emp_medium + emp_small
+*/
+
+gen ln_firms = ln(firms+1)
+gen ln_estabs = ln(estabs+1)
+gen ln_emp = ln(emp+1)
+save "`path'/Data/Outcomes/sector/bds_educ.dta", replace
+
+***************************************************
+	*** Merge BDS outcomes with grants
+
+use "`path'/Data/Outcomes/sector/bds_educ.dta", clear
+* manually change BDS codes to match
+* los angeles:
+replace msa = 31100 if msa == 31080
+replace msa = 26180 if msa == 46520
+rename msa cbsa_code
+save "`path'/Data/Outcomes/sector/bds_educ.dta", replace
+
+
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop if year == 2024
+merge 1:1 year cbsa_code using "`path'/Data/Outcomes/sector/bds_educ.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/sector/nih_educ_full.dta", replace
+
+******************************************************************************************************
+use "`path'/Data/NIH_Outcomes/sector/nih_educ_full.dta", clear
+
+keep cbsa_code cbsa_title year funding ln_funding income_per_cap ln_pop funding_pc ln_funding_pc log_98_03 percap_98_03 cbsa_title_abbrev field_admin field_basic_science field_engineering field_medicine field_pop_behave_science mech_research mech_infrastructure mech_training mech_contracts mech_other rel_98_03 pop bachelors_deg graduate_deg indus_health_services indus_educ_services firms_large firms_medium firms_small estabs_large estabs_medium estabs_small emp_large emp_medium emp_small firms estabs emp ln_firms ln_estabs ln_emp
+
+save "`path'/Data/NIH_Outcomes/sector/nih_educ.dta", replace
+
+
+******************************************************************************************************
+	*** Health
+***************************************************
+use "`path'/Data/Outcomes/sector/bds_health.dta", clear
+
+gen firms = firms_large + firms_medium + firms_small
+gen estabs = estabs_large + estabs_medium + estabs_small
+gen emp = emp_large + emp_medium + emp_small
+
+gen ln_firms = ln(firms+1)
+gen ln_estabs = ln(estabs+1)
+gen ln_emp = ln(emp+1)
+save "`path'/Data/Outcomes/sector/bds_health.dta", replace
+
+***************************************************
+	*** Merge BDS outcomes with grants
+
+use "`path'/Data/Outcomes/sector/bds_health.dta", clear
+* manually change BDS codes to match
+* los angeles:
+replace msa = 31100 if msa == 31080
+replace msa = 26180 if msa == 46520
+rename msa cbsa_code
+save "`path'/Data/Outcomes/sector/bds_health.dta", replace
+
+
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop if year == 2024
+merge 1:1 year cbsa_code using "`path'/Data/Outcomes/sector/bds_health.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/sector/nih_health_full.dta", replace
+
+******************************************************************************************************
+use "`path'/Data/NIH_Outcomes/sector/nih_health_full.dta", clear
+
+keep cbsa_code cbsa_title year funding ln_funding income_per_cap ln_pop funding_pc ln_funding_pc log_98_03 percap_98_03 cbsa_title_abbrev field_admin field_basic_science field_engineering field_medicine field_pop_behave_science mech_research mech_infrastructure mech_training mech_contracts mech_other rel_98_03 pop bachelors_deg graduate_deg indus_health_services indus_educ_services firms_large firms_medium firms_small estabs_large estabs_medium estabs_small emp_large emp_medium emp_small firms estabs emp ln_firms ln_estabs ln_emp
+
+save "`path'/Data/NIH_Outcomes/sector/nih_health.dta", replace
+
+******************************************************************************************************
+	*** Science
+***************************************************
+use "`path'/Data/Outcomes/sector/bds_science.dta", clear
+
+gen firms = firms_large + firms_medium + firms_small
+gen estabs = estabs_large + estabs_medium + estabs_small
+gen emp = emp_large + emp_medium + emp_small
+
+gen ln_firms = ln(firms+1)
+gen ln_estabs = ln(estabs+1)
+gen ln_emp = ln(emp+1)
+save "`path'/Data/Outcomes/sector/bds_science.dta", replace
+
+***************************************************
+	*** Merge BDS outcomes with grants
+
+use "`path'/Data/Outcomes/sector/bds_science.dta", clear
+* manually change BDS codes to match
+* los angeles:
+replace msa = 31100 if msa == 31080
+replace msa = 26180 if msa == 46520
+rename msa cbsa_code
+save "`path'/Data/Outcomes/sector/bds_science.dta", replace
+
+
+use "`path'/Data/NIH_v3/nih_use.dta", clear
+drop if year == 2024
+merge 1:1 year cbsa_code using "`path'/Data/Outcomes/sector/bds_science.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_Outcomes/sector/nih_science_full.dta", replace
+
+******************************************************************************************************
+use "`path'/Data/NIH_Outcomes/sector/nih_science_full.dta", clear
+
+keep cbsa_code cbsa_title year funding ln_funding income_per_cap ln_pop funding_pc ln_funding_pc log_98_03 percap_98_03 cbsa_title_abbrev field_admin field_basic_science field_engineering field_medicine field_pop_behave_science mech_research mech_infrastructure mech_training mech_contracts mech_other rel_98_03 pop bachelors_deg graduate_deg indus_health_services indus_educ_services firms estabs emp ln_firms ln_estabs ln_emp
+
+save "`path'/Data/NIH_Outcomes/sector/nih_science.dta", replace

@@ -1,28 +1,469 @@
 local path "/Users/lydia/Desktop/Thesis"
+ssc install estout
+ssc install binscatter
+use "`path'/Data/NIH_Outcomes/nih_outcomes.dta", clear
+***********************************************************
+	*** Annual time series 1999-2008
+use "`path'/Data/NIH_Outcomes/sector/nih_health.dta", clear
+save "`path'/Data/NIH_Outcomes/nih_timeseries.dta", replace
 
-import delimited "`path'/Data/NIH_v3/nih_bins.csv", clear
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1997 & year <= 2008
+xtset cbsa_code year
+* one year lags
+eststo m1: xtreg ln_firms L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L1.csv", se replace
+
+* two year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1996 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L2.csv", se replace
+
+* three year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1995 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L3.ln_funding L3.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L3.ln_funding L3.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L3.ln_funding L3.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L3.csv", se replace
+
+* four year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1994 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L4.ln_funding L4.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L4.ln_funding L4.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L4.ln_funding L4.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L4.csv", se replace
+
+* five year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1993 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L5.csv", se replace
+
+
+* six year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1992 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L6.ln_funding L6.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_estabs L6.ln_funding L6.ln_pop i.year, fe vce(cluster cbsa_code)
+eststo m2: xtreg ln_emp L6.ln_funding L6.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L6.csv", se replace
+
+
+
+
+**********************************************************************************************************************
+keep if year >= 1997 & year <= 2008
+xtset cbsa_code year
+* one year lags
+eststo m1: xtreg ln_firms L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L1.csv", se replace
+eststo m1: xtreg ln_estabs L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L1.csv", se replace
+eststo m1: xtreg ln_emp L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L1.csv", se replace
+
+* two year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1996 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L2.csv", se replace
+eststo m1: xtreg ln_estabs L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L2.csv", se replace
+eststo m1: xtreg ln_emp L2.ln_funding L2.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L2.csv", se replace
+
+* three year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1995 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L3.csv", se replace
+eststo m1: xtreg ln_estabs L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L3.csv", se replace
+eststo m1: xtreg ln_emp L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L3.csv", se replace
+
+* four year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1994 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L4.csv", se replace
+eststo m1: xtreg ln_estabs L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L4.csv", se replace
+eststo m1: xtreg ln_emp L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L4.csv", se replace
+
+* five year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1993 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L5.csv", se replace
+eststo m1: xtreg ln_estabs L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L5.csv", se replace
+eststo m1: xtreg ln_emp L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L5.csv", se replace
+
+
+* six year lags
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1993 & year <= 2008
+xtset cbsa_code year
+eststo m1: xtreg ln_firms L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_firms_L6.csv", se replace
+eststo m1: xtreg ln_estabs L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_estabs_L6.csv", se replace
+eststo m1: xtreg ln_emp L5.ln_funding L5.ln_pop i.year, fe vce(cluster cbsa_code)
+esttab m1 using "`path'/Outputs/Tables/Indus_health/panel_emp_L6.csv", se replace
+
+
+
+
+*************************************************************************************
+	*** Specific cities
+	
+// "Boston-Cambridge-Quincy, MA-NH"
+// "San Francisco-Oakland-Fremont, CA"
+// "New York-Northern New Jersey-Long Island, NY-NJ-PA"
+// "San Diego-Carlsbad-San Marcos, CA"
+// "Los Angeles-Long Beach-Santa Ana, CA"
+// "Washington-Arlington-Alexandria, DC-VA-MD-WV"
+// keep if cbsa_title == "San Francisco-Oakland-Fremont, CA"
+
+use "`path'/Data/NIH_Outcomes/sector/nih_science.dta", clear
+save "`path'/Data/NIH_Outcomes/nih_longdiff.dta", replace
+
+* 1 year lag
+use "`path'/Data/NIH_Outcomes/nih_longdiff.dta", clear
+keep if year >= 1998 & year <= 2008
+tsset cbsa_code year
+eststo f1: reg D.firms D.funding, robust
+eststo e1: reg D.estabs D.funding, robust
+eststo m1: reg D.emp D.funding, robust
+esttab f1 e1 m1 using "`path'/Outputs/Tables/Indus_science/longdiff_L1.csv", se replace
+
+* 2 year lag
+use "`path'/Data/NIH_Outcomes/nih_longdiff.dta", clear
+keep if year >= 1997 & year <= 2008
+tsset cbsa_code year
+eststo f1: reg D2.firms D2.funding, robust
+eststo e1: reg D2.estabs D2.funding, robust
+eststo m1: reg D2.emp D2.funding, robust
+esttab f1 e1 m1 using "`path'/Outputs/Tables/Indus_science/longdiff_L2.csv", se replace
+
+
+* 5 year lag
+use "`path'/Data/NIH_Outcomes/nih_longdiff.dta", clear
+keep if year >= 1994 & year <= 2008
+tsset cbsa_code year
+eststo f1: reg D5.firms D5.funding, robust
+eststo e1: reg D5.estabs D5.funding, robust
+eststo m1: reg D5.emp D5.funding, robust
+esttab f1 e1 m1 using "`path'/Outputs/Tables/Indus_science/longdiff_L5.csv", se replace
+
+
+
+
+******************************
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.firms D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.firms D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.firms D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.firms D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.firms D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_firms.csv", se replace
+
+* Establishments
+preserve
+	keep if year >= 1998 & year <= 2008
+	tsset year
+	eststo t1: reg D.estabs D.funding, robust
+restore
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.estabs D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.estabs D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.estabs D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.estabs D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.estabs D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_estabs.csv", se replace
+
+* Employment
+preserve
+	keep if year >= 1998 & year <= 2008
+	tsset year
+	eststo t1: reg D.emp D.funding, robust
+restore
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.emp D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.emp D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.emp D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.emp D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.emp D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_emp.csv", se replace
+
+
+/* 
+* Firms
+preserve
+	keep if year >= 1998 & year <= 2008
+	tsset year
+	eststo t1: reg D.firms D.funding, robust
+restore
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.firms D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.firms D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.firms D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.firms D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.firms D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_firms.csv", se replace
+
+* Establishments
+preserve
+	keep if year >= 1998 & year <= 2008
+	tsset year
+	eststo t1: reg D.estabs D.funding, robust
+restore
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.estabs D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.estabs D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.estabs D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.estabs D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.estabs D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_estabs.csv", se replace
+
+* Employment
+preserve
+	keep if year >= 1998 & year <= 2008
+	tsset year
+	eststo t1: reg D.emp D.funding, robust
+restore
+preserve
+	keep if year >= 1997 & year <= 2008
+	tsset year
+	eststo t2: reg D2.emp D2.funding, robust
+restore
+preserve
+	keep if year >= 1996 & year <= 2008
+	tsset year
+	eststo t3: reg D3.emp D3.funding, robust
+restore
+preserve
+	keep if year >= 1995 & year <= 2008
+	tsset year
+	eststo t4: reg D4.emp D4.funding, robust
+restore
+preserve
+	keep if year >= 1994 & year <= 2008
+	tsset year
+	eststo t5: reg D5.emp D5.funding, robust
+restore
+preserve
+	keep if year >= 1993 & year <= 2008
+	tsset year
+	eststo t6: reg D6.emp D6.funding, robust
+restore
+esttab t1 t2 t3 t4 t5 t6 using "`path'/Outputs/Tables/Indus_health/time_series_emp.csv", se replace
+
+
+
+
+
+
+Plot of trends
+twoway (line ln_emp year, lwidth(medthick)) (line ln_funding year, yaxis(2) lpattern(dash)), xtitle("Year") ytitle("Log employment") ytitle("Log NIH funding", axis(2)) title("Employment and NIH funding over time: Boston")
+	
+	egen z_emp = std(ln_emp)
+	egen z_fund = std(ln_funding)
+	twoway (line z_emp year, lwidth(medthick)) (line z_fund year, lpattern(dash)), ytitle("Standardized value") title("Standardized employment and NIH funding: Boston)
+*/
+***********************************************************
+	*** Long difference
+	
+
+use "`path'/Data/NIH_Outcomes/nih_educ_longdiff.dta", clear
+keep if year == 1998 | year == 2007
+keep year ln_firms ln_estabs ln_emp ln_pop ln_funding cbsa_code cbsa_title_abbrev bachelors_deg graduate_deg income_per_cap
+reshape wide ln_firms ln_estabs ln_emp ln_pop ln_funding, i(cbsa_code) j(year)
+gen d_ln_firms = ln_firms2007 - ln_firms1998
+gen d_ln_estabs = ln_estabs2007 - ln_estabs1998
+gen d_ln_emp = ln_emp2007 - ln_emp1998
+gen d_ln_funding = ln_funding2007 - ln_funding1998
+gen d_ln_pop = ln_pop2007 - ln_pop1998
+drop if d_ln_funding == .
+save "`path'/Data/NIH_Outcomes/nih_educ_longdiff_98_07.dta", replace
+
+
+
+/*
+use "`path'/Data/NIH_Outcomes/nih_longdiff_98_07.dta", clear
+eststo m1: reg d_ln_firms d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+* Residualize outcome
+reg d_ln_firms d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict y_resid, resid
+* Residualize regressor
+reg d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict x_resid, resid
+twoway (scatter y_resid x_resid, msymbol(none) mlabel(cbsa_title_abbrev) mlabsize(vsmall) mlabcolor(gs8)), xtitle("Δ log NIH funding (residualized)") ytitle("Δ log firms (residualized)") title("Partial relationship: NIH funding and firm growth")
+
+use "`path'/Data/NIH_Outcomes/nih_longdiff_98_07.dta", clear
+eststo m2: reg d_ln_estabs d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+* Residualize outcome
+reg d_ln_estabs d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict y_resid, resid
+* Residualize regressor
+reg d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict x_resid, resid
+twoway (scatter y_resid x_resid, msymbol(none) mlabel(cbsa_title_abbrev) mlabsize(vsmall) mlabcolor(gs8)), xtitle("Δ log NIH funding (residualized)") ytitle("Δ log establishments (residualized)") title("Partial relationship: NIH funding and establishment growth")
+
+use "`path'/Data/NIH_Outcomes/nih_longdiff_98_07.dta", clear
+eststo m3: reg d_ln_emp d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+* Residualize outcome
+reg d_ln_emp d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict y_resid, resid
+* Residualize regressor
+reg d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap
+predict x_resid, resid
+twoway (scatter y_resid x_resid, msymbol(none) mlabel(cbsa_title_abbrev) mlabsize(vsmall) mlabcolor(gs8)), xtitle("Δ log NIH funding (residualized)") ytitle("Δ log employment (residualized)") title("Partial relationship: NIH funding and employment growth")
+
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/longdiff_98_07.csv", se replace
+*/
+
+use "`path'/Data/NIH_Outcomes/nih_longdiff.dta", clear
+keep if year == 2008 | year == 2017
+keep year ln_firms ln_estabs ln_emp ln_pop ln_funding cbsa_code cbsa_title_abbrev bachelors_deg graduate_deg income_per_cap
+reshape wide ln_firms ln_estabs ln_emp ln_pop ln_funding, i(cbsa_code) j(year)
+gen d_ln_firms = ln_firms2017 - ln_firms2008
+gen d_ln_estabs = ln_estabs2017 - ln_estabs2008
+gen d_ln_emp = ln_emp2017 - ln_emp2008
+gen d_ln_funding = ln_funding2017 - ln_funding2008
+gen d_ln_pop = ln_pop2017 - ln_pop2008
+drop if d_ln_funding == .
+
+eststo m1: reg d_ln_firms d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+eststo m2: reg d_ln_estabs d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+eststo m3: reg d_ln_emp d_ln_funding d_ln_pop bachelors_deg graduate_deg income_per_cap, robust
+
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/longdiff_08_17.csv", se replace
+
+/*
+***********************************************************
+import delimited "`path'/Data/NIH_Outcomes/nih_bins.csv", clear
 
 ssc install estout, replace
-*** 5-year period bins
-* nominal levels
-// xtset cbsa_code bin
-// xtreg estabs funding 1.bin#c.funding
-// xtreg estabs funding 1.bin#c.funding, fe vce(cluster cbsa_code)
-// xtreg firms funding 1.bin#c.funding
-// xtreg firms funding 1.bin#c.funding, fe vce(cluster cbsa_code)
-// xtreg emp funding 1.bin#c.funding
-// xtreg emp funding 1.bin#c.funding, fe vce(cluster cbsa_code)
-//
-// * per capita
-// xtreg estabs_pc funding_pc 1.bin#c.funding_pc
-// xtreg estabs_pc funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
-// xtreg firms_pc funding_pc 1.bin#c.funding_pc
-// xtreg firms_pc funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
-// xtreg emp_share funding_pc 1.bin#c.funding_pc
-// xtreg emp_share funding_pc 1.bin#c.funding_pc, fe vce(cluster cbsa_code)
 
-
-* simple panel
+***********************************************************
+* simple panel (replicating brookings)
 xtset cbsa_code bin
 xtreg estabs funding, fe vce(cluster cbsa_code)
 xtreg firms funding, fe vce(cluster cbsa_code)
@@ -65,7 +506,11 @@ xtreg estabs_entry_rate log_funding i.bin, fe vce(cluster cbsa_code)
 xtreg estabs_entry_rate c.funding_pc##ib1.bin, fe vce(cluster cbsa_code)
 xtreg estabs_entry_rate c.log_funding##ib1.bin, fe vce(cluster cbsa_code)
 
-	   
+
+
+
+***********************************************************
+
 /*
 import delimited "`path'/Data/NIH_v3/nih_use_outcomes.csv", clear
 

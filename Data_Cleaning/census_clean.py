@@ -5,7 +5,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 base_path = Path(__file__).resolve().parent.parent.parent
 
-# %%
+# %% 1990 Census
 census1990 = pd.read_csv(base_path / "Raw_data/Census/census_1990/census1990.csv")
 
 keep = ["STUSAB", "COUNTY", "COUNTYA", "STATE", "STATEA", "ET1001", "E37006", "E37007", "E4P014", "E4P015", "E4U001", "E01001"]
@@ -42,7 +42,7 @@ census1990.to_csv(base_path / "Data/Census/census_1990_v2/census1990.csv")
 
 
 # Merge with MSAs
-county_cbsa = pd.read_csv(base_path / "Data/Crosswalks/county_cbsa_xwalk_2009.csv")
+county_cbsa = pd.read_csv(base_path / "Data/Crosswalks/Used/county_cbsa_xwalk_2009.csv")
 county_cbsa['county_fips'] = county_cbsa['county_fips'].astype('string').str.strip().str.zfill(5)
 census1990['county'] = census1990['county'].astype('string').str.strip().str.zfill(5)
 census_msa = census1990.merge(
@@ -92,13 +92,57 @@ census_msa['log_pop'] = np.log(census_msa['total_pop'])
 
 # %%
 # keep relevant columns only
-census_msa = census_msa[['CBSA_code', 'CBSA_title', 'total_pop',
-       'total_income_imputed', 'income_per_cap',
-       'share_college', 'share_gradschool', 'share_health_indus',
-       'share_educ_indus', 'log_pop']]
+# census_msa = census_msa[['CBSA_code', 'CBSA_title', 'total_pop',
+#        'total_income_imputed', 'income_per_cap',
+#        'share_college', 'share_gradschool', 'share_health_indus',
+#        'share_educ_indus', 'log_pop']]
 census_msa.to_csv(base_path / "Data/Census/census_1990_v2/census1990_msa.csv", index=False)
-census_msa.to_csv(base_path / "Data/NIH_v3/census1990_msa.csv", index=False)
+# census_msa.to_csv(base_path / "Data/NIH_v3/census1990_msa.csv", index=False)
 
 # now this is 1990 census info ready to merge with NIH data
 
 
+
+# %% Annual Census Counts -- moved to Stata
+infile = base_path / "Raw_data/99c8_00.txt"
+
+colspecs = [
+    (0, 1),      # summary level
+    (2, 9),      # county fips
+    (10, 23),    # 1999
+    (24, 37),    # 1998
+    (38, 51),    # 1997
+    (52, 65),    # 1996
+    (66, 79),    # 1995
+    (80, 93),    # 1994
+    (94, 107),   # 1993
+    (108, 121),  # 1992
+    (122, 135),  # 1991
+    (136, 149),  # 1990
+    (150, 163),  # April 1, 1990
+    (164, 199),  # area name
+]
+
+names = [
+    "level", "cty_fips",
+    "pop1999","pop1998","pop1997","pop1996","pop1995",
+    "pop1994","pop1993","pop1992","pop1991","pop1990",
+    "base1990","cty_name"
+]
+
+df = pd.read_fwf(infile, colspecs=colspecs, names=names, dtype=str)
+
+# Clean numbers
+for c in names[1:-1]:
+    df[c] = (
+        df[c]
+        .str.replace(",", "", regex=False)
+        .astype(float)
+        .astype("Int64")
+    )
+
+df["level"] = df["level"].astype(int)
+df["areaname"] = df["areaname"].str.strip()
+
+df.to_csv(base_path / "Data/census/pop_1990_1999.csv", index=False)
+# %%

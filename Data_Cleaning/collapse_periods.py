@@ -13,12 +13,13 @@ base_path = Path(__file__).resolve().parent.parent.parent
 # then run a panel regression with indicator on 1999-2003 periods
 
 # Make bins
-nih = pd.read_csv(base_path / "Data/NIH_v3/nih_use_outcomes.csv")
+nih = pd.read_csv(base_path / "Data/NIH_Outcomes/nih_use_outcomes.csv")
 nih.loc[nih['year'].between(1994, 1998), 'bin'] = 0
 nih.loc[nih['year'].between(1999, 2003), 'bin'] = 1
 nih.loc[nih['year'].between(2004, 2008), 'bin'] = 2
 nih.loc[nih['year'].between(2009, 2013), 'bin'] = 3
 nih.loc[nih['year'].between(2014, 2018), 'bin'] = 4
+nih.to_csv(base_path / "Data/NIH_Outcomes/nih_use_outcomes.csv")
 # %%
 nih_bins = nih.drop(columns='year')
 nih_bins = nih_bins[nih_bins['bin'].notna()]
