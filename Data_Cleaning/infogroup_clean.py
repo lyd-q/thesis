@@ -30,16 +30,66 @@ np.savetxt(
 )
 # %%
 naics_codes = infog_97[['primary_naics_code']].drop_duplicates().sort_values(['primary_naics_code'])
-naics_codes.dtypes
+naics_codes['primary_naics_code'] = naics_codes['primary_naics_code'].astype(int)
 naics_codes['naics_code_2dig'] = naics_codes['primary_naics_code'] // 1000000
-naics_codes = naics_codes.loc[naics_codes['naics_code_2dig'].isin([54, 61, 62])]
+naics_codes['naics_code_4dig'] = naics_codes['primary_naics_code'] // 10000
+naics_codes = naics_codes.loc[naics_codes['naics_code_4dig'].isin([5417, 6113]) | (naics_codes['naics_code_2dig'] == 62)]
+# "Colleges, Universities, and Professional Schools"
 np.savetxt(
     base_path / "Data/Crosswalks/naics_codes.txt",
     naics_codes['primary_naics_code'].astype(int),
     fmt="%s"
 )
 # %%
-infog_97_07 = pd.read_csv(base_path / "Raw_data/Infogroup/infog_97_07.csv", low_memory=False)
+infog_97_07 = pd.read_csv(base_path / "Raw_data/Infogroup/infog_97_07.csv",
+    dtype={
+            "archive_version_year": "int64",
+            "abi": "string",
+            "ticker": "string",
+            "parent_number": "string",
+            "company": "string",
+            "address_line_1": "string",
+            "city": "string",
+            "state": "string",
+            "zipcode": "string",
+            "zip4": "string",
+            "county_code": "string",
+            "area_code": "string",
+            "idcode": "string",
+            "location_employee_size_code": "string",
+            "primary_sic_code": "string",
+            "sic6_descriptions": "string",
+            "primary_naics_code": "string",
+            "naics8_descriptions": "string",
+            "sic_code": "string",
+            "sic6_descriptions_sic": "string",
+            "business_status_code": "string",
+            "industry_specific_first_byte": "string",
+            "office_size_code": "string",
+            "company_holding_status": "string",
+            "subsidiary_number": "string",
+            "parent_employee_size_code": "string",
+            "parent_sales_volume_code": "string",
+            "site_number": "string",
+            "address_type_indicator": "string",
+            "population_code": "string",
+            "census_tract": "string",
+            "census_block": "string",
+            "match_code": "string",
+            "cbsa_code": "string",
+            "cbsa_level": "string",
+            "csa_code": "string",
+            "fips_code": "string",
+            "year_established": "float64",
+            "employee_size_location": "float64",
+            "sales_volume_location": "float64",
+            "parent_actual_employee_size": "float64",
+            "parent_actual_sales_volume": "float64",
+            "latitude": "float64",
+            "longitude": "float64",
+        }
+)
 # %%
-infog_97 = infog_97_07[['archive_version_year'] == 1997]
-infog_97.to_csv('')
+infog_97 = infog_97_07[infog_97_07['archive_version_year'] == 1997]
+infog_97.to_csv(base_path / 'Raw_data/Infogroup/infog_97_naics.csv', index=False)
+# %%
