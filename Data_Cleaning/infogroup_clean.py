@@ -34,14 +34,14 @@ naics_codes['primary_naics_code'] = naics_codes['primary_naics_code'].astype(int
 naics_codes['naics_code_2dig'] = naics_codes['primary_naics_code'] // 1000000
 naics_codes['naics_code_4dig'] = naics_codes['primary_naics_code'] // 10000
 naics_codes = naics_codes.loc[naics_codes['naics_code_4dig'].isin([5417, 6113]) | (naics_codes['naics_code_2dig'] == 62)]
-# "Colleges, Universities, and Professional Schools"
+# "Scientific Research and Development Services", "Colleges, Universities, and Professional Schools", "Health Care and Social Assistance"
 np.savetxt(
     base_path / "Data/Crosswalks/naics_codes.txt",
     naics_codes['primary_naics_code'].astype(int),
     fmt="%s"
 )
 # %%
-infog_97_07 = pd.read_csv(base_path / "Raw_data/Infogroup/infog_97_07.csv",
+infog_97_07 = pd.read_csv(base_path / "Raw_data/Infogroup/infog_97_07_naics.csv",
     dtype={
             "archive_version_year": "int64",
             "abi": "string",
@@ -90,6 +90,21 @@ infog_97_07 = pd.read_csv(base_path / "Raw_data/Infogroup/infog_97_07.csv",
         }
 )
 # %%
+# look at 1997 for an example
 infog_97 = infog_97_07[infog_97_07['archive_version_year'] == 1997]
 infog_97.to_csv(base_path / 'Raw_data/Infogroup/infog_97_naics.csv', index=False)
+# %%
+# keep only relevant NAICS
+cbsa = pd.read_csv(base_path / "Data/Crosswalks/cbsa_codes.txt", header=None)
+infog_97_cbsa = infog_97[infog_97['cbsa_code'].isin(cbsa[0].astype(str))]
+infog_97_cbsa.to_csv(base_path / "Data/Infogroup/infog_97_cbsa.csv")
+# %%
+infog_97_cbsa_geo = infog_97_cbsa[['latitude', 'longitude']]
+infog_97_cbsa_geo.to_csv(base_path / "Data/Infogroup/infog_97_cbsa_geo.csv")
+
+
+# %% ### Let's try just Boston
+infog_97_boston = infog_97_cbsa[infog_97_cbsa['cbsa_code']=="14460"]
+infog_97_boston.to_csv(base_path / "Data/Infogroup/infog_97_boston.csv")
+
 # %%
