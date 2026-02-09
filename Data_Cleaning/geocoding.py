@@ -91,7 +91,7 @@ nih_addresses_exact.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addre
 
 
 
-
+# keep unmatched to do further clean/fuzzy matching
 
 # %%
 nih_addresses.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses.csv", index=False)
@@ -104,6 +104,7 @@ noise_and_abbrevs = {
     r"\bCTR\b": "CENTER",
     r"\bREGENTS\b": "",        # optional
     r"\bOF\b": "",
+    r"\bAND\b": "",
     r"\bST\.?\b": "SAINT",     # matches ST and ST.
 }
 
@@ -212,6 +213,11 @@ left_only      729607
 With new regex
 both          984419
 left_only     876325
+
+# PO removed, regex, name only
+both          1654665
+left_only      541458
+= 75% match rate
 # %%
 nih = pd.read_stata("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_grants.dta")
 nih.columns
