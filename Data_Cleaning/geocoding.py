@@ -5,9 +5,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 base_path = Path(__file__).resolve().parent.parent.parent
 import pandas as pd
-from rapidfuzz import process, fuzz
+# from rapidfuzz import process, fuzz
 
-
+########## Getting addresses - HHS database #####################
 # %%
 nih_read = pd.read_stata("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_grants.dta")
 nih_read.columns
@@ -89,13 +89,244 @@ nih_addresses_exact.sort_values(by=['_merge'])
 nih_addresses_exact.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses_exact.csv", index=False)
 
 
+# %% Merge stats
+# Normal merge
+# both          1359919
+# left_only      867299
+
+# With punctuation removed
+# both          1538412
+# left_only      743149
+
+# With spaces also removed
+# both          1547172
+# left_only      738752
+
+# with PO removed
+# both          1141715
+# left_only      753004
+
+# after regex and universities
+# both          1677030
+# left_only      729607
+
+# With new regex
+# both          984419
+# left_only     876325
+
+# # PO removed, regex, name only
+# both          1654665
+# left_only      541458
+# = 75% match rate
+
+
+########### Merging addresses - Hospitals ######################################
+# from scratch
+# %%
+nih_read = pd.read_stata("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_grants.dta")
+nih_read.columns
+nih_read.shape
+# %%
+nih = nih_read.copy()
+# %%
+cms = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Geocoding/Hospital_General_Information.csv")
+cms.columns
+
+# %%
+hospitals = cms.copy()[['Facility Name', 'Address', 'City/Town', 'State',
+       'ZIP Code', 'County/Parish']]
+hospitals.columns
+# %%
+hospitals = hospitals.rename(columns={
+    "Facility Name":"organizationname_merged",
+    "Address":"address_merged",
+    "City/Town":"city_merged",
+    "State":"state_merged",
+    "ZIP Code":"zip_merged",
+    "County/Parish":"county_name_merged"
+})
+hospitals.shape
+hospitals = hospitals.drop_duplicates()
+hospitals.shape
+
+nih[['organizationname', 'county_name']] = nih[['organizationname', 'county_name']].apply(lambda s: s.str.upper())
+nih['name'] = nih['organizationname'].copy()
+hospitals['name'] = hospitals['organizationname_merged'].copy()
+
+hospitals['state'] = hospitals['state_merged'].copy()
+# %%
+##################
+noise_and_abbrevs = {
+    r"\bUNIV\b": "UNIVERSITY",
+    r"\bSCH\b": "SCHOOL",
+    r"\bCTR\b": "",
+    r"\bCENTER\b": "",
+    r"\bREGENTS\b": "",   
+    r"\bOF\b": "",
+    r"\bAND\b": "",
+    r"\bST\.?\b": "SAINT",
+    r"\bHOSP\b": "HOSPITAL",
+    r"\bMED\.?\b": "MEDICAL",
+    r"\b&\b": "AND",
+}
+def clean_org_column(df, col_name):
+    # 1) Use pandas string dtype; keep missing as empty string (avoid "NAN")
+    s = df[col_name].astype("string").fillna("").str.upper()
+
+    # 2) Normalize punctuation/separators to spaces BEFORE word-level replacements
+    s = (s.str.replace(r"[^A-Z0-9 ]", " ", regex=True)
+           .str.replace(r"\s+", " ", regex=True)
+           .str.strip())
+
+    # 3) Expand/remove specific words with word boundaries
+    for pattern, replacement in noise_and_abbrevs.items():
+        s = s.str.replace(pattern, replacement, regex=True)
+
+    # 4) Re-collapse whitespace after replacements
+    s = (s.str.replace(r"\s+", " ", regex=True)
+           .str.strip())
+
+    # 5) Crush to alphanumeric-only (no spaces) for matching key
+    s = s.str.replace(r"[^A-Z0-9]", "", regex=True)
+
+    # Write back (overwriting col_name, since it's already your working copy)
+    df[col_name] = s
+    return df
+
+# Apply in-place to your working columns
+clean_org_column(nih, "name")
+clean_org_column(nih, "state")
+
+clean_org_column(hospitals, "name")
+clean_org_column(hospitals, "state")
+
+print("Shape before dropping name+state duplicates: ", hospitals.shape)
+print("Hospital name duplicates: ", hospitals['name'].duplicated().sum())
+print("Hospital name and state duplicates: ", hospitals[['name', 'state']].duplicated().sum())
+hospitals[['name', 'state']].drop_duplicates()
+print("Shape after dropping name+state duplicates: ", hospitals.shape)
+print("NIH Shape: ", nih.shape)
+####################
+# %% Clean names
+# hospitals['county'] = hospitals['county_name'].copy()
+# nih['name'] = nih['name'] .str.replace(r"[^A-Z0-9]", "", regex=True)
+# hospitals['name'] = hospitals['name'] .str.replace(r"[^A-Z0-9]", "", regex=True)
+
+# nih['county'] = nih['county'] .str.replace(r"[^A-Z0-9]", "", regex=True)
+# hospitals['county'] = hospitals['county'] .str.replace(r"[^A-Z0-9]", "", regex=True)
+
+# %%
+# matching on name ONLY
+# nih_hospitals = nih.merge(hospitals, how='left', on=['name'], indicator=True)
+# nih_hospitals['_merge'].value_counts()
+
+# %%
+# matching on name AND county
+# should be a many to 1 merge
+nih_hospitals_state = nih.merge(hospitals, how='left', on=['name', 'state'], indicator=True)
+nih_hospitals_state['_merge'].value_counts()
+
+#%% 
+nih_hospitals_state.sort_values(by=['_merge'])
+nih_hospitals_state.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_hospitals_exact.csv", index=False)
+
+
+###################
+### most basic merge
+# left_only     1556716
+# both            93750
+
+### after cleaning
+# left_only     1544826
+# both           105781
+
+# name afer dropping name and county duplicates, on name only
+# left_only     1544826
+# both           105781
+
+### name and county after dropping 
+# left_only     1558102
+# both            92210
+
+### name and state
+# left_only     1551729
+# both            98603
+
+########### Merging addresses - Universities ######################################
+
+
+########### Old version ######################################
+#  %%
+nih = pd.read_stata("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_grants.dta")
+nih.columns
+nih.
+# %%
+taggs1 = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Geocoding/HHS/TAGGS_97-06.csv")
+taggs1.columns
+
+taggs1 = taggs1.rename(columns={
+    "Issue Date Fiscal Year":"year",
+    "Legal Entity Name":"organizationname",
+    "Legal Entity Address":"address",
+    "Legal Entity City":"city",
+    "Legal Entity State":"state",
+    "Legal Entity ZIP Code":"zip",
+    "Legal Entity County":"county_name",
+    "Sum of Actions ":"funds"
+})
+taggs1 = taggs1.loc[taggs1.groupby(["organizationname", "county_name"])["funds"].idxmax()]
+taggs1 = taggs1.drop(columns=["funds", "zip"])
+taggs1 = taggs1.drop_duplicates()
+print(taggs1.shape)
+# %%
+taggs2 = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Geocoding/HHS/TAGGS_07-21.csv")
+taggs2.columns
+taggs2 = taggs2.rename(columns={
+    "Issue Date Fiscal Year":"year",
+    "Legal Entity Name":"organizationname",
+    "Legal Entity Address":"address",
+    "Legal Entity City":"city",
+    "Legal Entity State":"state",
+    "Legal Entity ZIP Code":"zip",
+    "Legal Entity County":"county_name",
+    "Sum of Actions ":"funds"
+})
+taggs2 = taggs2.loc[taggs2.groupby(["organizationname", "county_name"])["funds"].idxmax()]
+taggs2 = taggs2.drop(columns=["funds", "zip"])
+taggs2 = taggs2.drop_duplicates()
+print(taggs2.shape)
+
+taggs = pd.concat([taggs1, taggs2], axis=0)
+taggs.shape
+
+# %% Try merging
+nih[['organizationname', 'county_name']] = nih[['organizationname', 'county_name']].apply(lambda s: s.str.upper())
+taggs[['organizationname', 'county_name']] = taggs[['organizationname', 'county_name']].apply(lambda s : s.str.upper())
+nih_addresses = nih.merge(taggs, how='left', on=['organizationname', 'county_name'], indicator=True)
+# %% Try merging
+nih[['organizationname', 'county_name']] = nih[['organizationname', 'county_name']].apply(lambda s: s.str.upper())
+taggs[['organizationname', 'county_name']] = taggs[['organizationname', 'county_name']].apply(lambda s : s.str.upper())
+
+nih['organizationname'] = nih['organizationname'] .str.replace(r"[.,]", "", regex=True)
+taggs['organizationname'] = taggs['organizationname'] .str.replace(r"[.,]", "", regex=True)
+nih['organizationname'] = nih['organizationname'] .str.replace(r"\s+", "", regex=True)
+taggs['organizationname'] = taggs['organizationname'] .str.replace(r"\s+", "", regex=True)
+
+nih_addresses = nih.merge(taggs, how='left', on=['organizationname', 'county_name'], indicator=True)
+nih_addresses['_merge'].value_counts()
+nih_addresses.sort_values(by=['_merge'])
+# %%
+nih_addresses_v2 = nih.merge(taggs, how='left', on=['organizationname'], indicator=True)
+nih_addresses_v2['_merge'].value_counts()
+nih_addresses_v2.sort_values(by=['_merge'])
+nih_addresses_v2.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses_v2.csv", index=False)
+# %%
+nih_addresses.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses.csv", index=False)
+
+
 
 
 # keep unmatched to do further clean/fuzzy matching
-
-# %%
-nih_addresses.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses.csv", index=False)
- 
 # %%
 # Normalize common abbreviations / remove glue words (word-boundary safe)
 noise_and_abbrevs = {
@@ -107,6 +338,10 @@ noise_and_abbrevs = {
     r"\bAND\b": "",
     r"\bST\.?\b": "SAINT",     # matches ST and ST.
 }
+
+###
+# other abbreviations: HOSP MED CTR
+###
 
 def clean_org_column(df, col_name):
     # 1) Use pandas string dtype; keep missing as empty string (avoid "NAN")
@@ -188,99 +423,3 @@ nih_addresses_v2.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresse
 nih_unmatched_v2 = nih_addresses_v2[nih_addresses_v2['_merge'] == 'left_only']
 print(nih_unmatched_v2['organizationname'].nunique())
 nih_unmatched_v2.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses.csv", index=False)
-# %%
-
-# Normal merge
-# both          1359919
-# left_only      867299
-
-# With punctuation removed
-# both          1538412
-# left_only      743149
-
-# With spaces also removed
-# both          1547172
-# left_only      738752
-
-# with PO removed
-both          1141715
-left_only      753004
-
-after regex and universities
-both          1677030
-left_only      729607
-
-With new regex
-both          984419
-left_only     876325
-
-# PO removed, regex, name only
-both          1654665
-left_only      541458
-= 75% match rate
-# %%
-nih = pd.read_stata("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_grants.dta")
-nih.columns
-nih.
-# %%
-taggs1 = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Geocoding/HHS/TAGGS_97-06.csv")
-taggs1.columns
-
-taggs1 = taggs1.rename(columns={
-    "Issue Date Fiscal Year":"year",
-    "Legal Entity Name":"organizationname",
-    "Legal Entity Address":"address",
-    "Legal Entity City":"city",
-    "Legal Entity State":"state",
-    "Legal Entity ZIP Code":"zip",
-    "Legal Entity County":"county_name",
-    "Sum of Actions ":"funds"
-})
-taggs1 = taggs1.loc[taggs1.groupby(["organizationname", "county_name"])["funds"].idxmax()]
-taggs1 = taggs1.drop(columns=["funds", "zip"])
-taggs1 = taggs1.drop_duplicates()
-print(taggs1.shape)
-# %%
-taggs2 = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Geocoding/HHS/TAGGS_07-21.csv")
-taggs2.columns
-taggs2 = taggs2.rename(columns={
-    "Issue Date Fiscal Year":"year",
-    "Legal Entity Name":"organizationname",
-    "Legal Entity Address":"address",
-    "Legal Entity City":"city",
-    "Legal Entity State":"state",
-    "Legal Entity ZIP Code":"zip",
-    "Legal Entity County":"county_name",
-    "Sum of Actions ":"funds"
-})
-taggs2 = taggs2.loc[taggs2.groupby(["organizationname", "county_name"])["funds"].idxmax()]
-taggs2 = taggs2.drop(columns=["funds", "zip"])
-taggs2 = taggs2.drop_duplicates()
-print(taggs2.shape)
-
-taggs = pd.concat([taggs1, taggs2], axis=0)
-taggs.shape
-
-# %% Try merging
-nih[['organizationname', 'county_name']] = nih[['organizationname', 'county_name']].apply(lambda s: s.str.upper())
-taggs[['organizationname', 'county_name']] = taggs[['organizationname', 'county_name']].apply(lambda s : s.str.upper())
-nih_addresses = nih.merge(taggs, how='left', on=['organizationname', 'county_name'], indicator=True)
-# %% Try merging
-nih[['organizationname', 'county_name']] = nih[['organizationname', 'county_name']].apply(lambda s: s.str.upper())
-taggs[['organizationname', 'county_name']] = taggs[['organizationname', 'county_name']].apply(lambda s : s.str.upper())
-
-nih['organizationname'] = nih['organizationname'] .str.replace(r"[.,]", "", regex=True)
-taggs['organizationname'] = taggs['organizationname'] .str.replace(r"[.,]", "", regex=True)
-nih['organizationname'] = nih['organizationname'] .str.replace(r"\s+", "", regex=True)
-taggs['organizationname'] = taggs['organizationname'] .str.replace(r"\s+", "", regex=True)
-
-nih_addresses = nih.merge(taggs, how='left', on=['organizationname', 'county_name'], indicator=True)
-nih_addresses['_merge'].value_counts()
-nih_addresses.sort_values(by=['_merge'])
-# %%
-nih_addresses_v2 = nih.merge(taggs, how='left', on=['organizationname'], indicator=True)
-nih_addresses_v2['_merge'].value_counts()
-nih_addresses_v2.sort_values(by=['_merge'])
-nih_addresses_v2.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses_v2.csv", index=False)
-# %%
-nih_addresses.to_csv("/Users/lydia/Desktop/Thesis/Data/NIH_Indiv/nih_addresses.csv", index=False)

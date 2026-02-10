@@ -1,6 +1,6 @@
 local path "/Users/lydia/Desktop/Thesis"
 ssc install estout
-use "`path'/Data/NIH_Outcomes/sector/nih_educ.dta", clear
+use "`path'/Data/NIH_Outcomes/sector/nih_health.dta", clear
 save "`path'/Data/NIH_Outcomes/cross_sec.dta", replace
 
 * 1995
@@ -46,10 +46,17 @@ eststo f20: reg ln_firms ln_funding ln_pop income_per_cap bachelors_deg, robust
 eststo e20: reg ln_estabs ln_funding ln_pop income_per_cap bachelors_deg, robust
 eststo emp20: reg ln_emp ln_funding ln_pop income_per_cap bachelors_deg, robust
 
-esttab f95 f00 f05 f10 f15 f20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_firms.csv", se replace
-esttab e95 e00 e05 e10 e15 e20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_estabs.csv", se replace
-esttab emp95 emp00 emp05 emp10 emp15 emp20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_emp.csv", se replace
+esttab f95 f00 f05 f10 f15 f20 using `path'/Outputs/Tables/Indus_health/cross_sec_firms.tex, label replace se mtitles("1995" "2000" "2005" "2010" "2015" "2020") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
 
+esttab e95 e00 e05 e10 e15 e20 using `path'/Outputs/Tables/Indus_health/cross_sec_estabs.tex, label replace se mtitles("1995" "2000" "2005" "2010" "2015" "2020") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
+
+esttab emp95 emp00 emp05 emp10 emp15 emp20 using `path'/Outputs/Tables/Indus_health/cross_sec_emp.tex, label replace se mtitles("1995" "2000" "2005" "2010" "2015" "2020") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
+
+
+
+// esttab f95 f00 f05 f10 f15 f20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_firms.csv", se replace
+// esttab e95 e00 e05 e10 e15 e20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_estabs.csv", se replace
+// esttab emp95 emp00 emp05 emp10 emp15 emp20 using "`path'/Outputs/Tables/Indus_educ/cross_sec_emp.csv", se replace
 
 // * pop, income, bachelors, graduate
 // eststo f95: reg ln_firms ln_funding ln_pop income_per_cap bachelors_deg graduate_deg, robust
