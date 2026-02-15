@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 from matplotlib.colors import Normalize
 
-base_path = Path(__file__).resolve().parent.parent
+base_path = Path(__file__).resolve().parent.parent.parent
 
 #%% 
 ##### OLD VERSION #####
@@ -70,12 +70,13 @@ for year in range(1998, 2005):  # 1998..2003
     print(f"Saved map and data for {year}")
 #%% 
 ##### NEW VERSION - PER CAPITA #####
-df_funding = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_upload.csv")
+# df_funding = pd.read_csv(base_path / "Data/Cleaned/full/nih_msa_upload.csv")
+df_funding = pd.read_stata(base_path / "Data/NIH_v4/nih_funding_use.dta")
 
 CBSACODE= "CBSA_code"
 CBSATITLE = "CBSA_title"
 YEAR = "year"
-FUNDING = "funding_log_percap"
+FUNDING = "funding_pc"
 
 df_funding[YEAR] = df_funding[YEAR].astype(int)
 df_funding[CBSACODE] = df_funding[CBSACODE].astype(str).str.zfill(5)
@@ -125,6 +126,82 @@ for year in range(1998, 2004):  # 1998..2003
     plt.close()
 
     print(f"Saved map and data for {year}")
+
+#%%
+CBSACODE= "CBSA_code"
+CBSATITLE = "CBSA_title"
+YEAR = "year"
+FUNDING = "log_funding_pc"
+
+df_funding[YEAR] = df_funding[YEAR].astype(int)
+df_funding[CBSACODE] = df_funding[CBSACODE].astype(str).str.zfill(5)
+df_funding = df_funding[df_funding["year"].between(1998, 2003)]
+
+vmin = df_funding[FUNDING].min()
+vmax = df_funding[FUNDING].max()
+print("Global range:", vmin, "→", vmax)
+
+vals = df_funding[FUNDING].dropna().to_numpy()
+
+
+for year in range(1998, 2004):  # 1998..2003
+    df_funding_year = df_funding[df_funding[YEAR] == year]
+
+    cbsa_path = f"{base_path}/Data/Mapping/tl_2010_us_cbsa10.zip"
+    g_cbsa = gpd.read_file(cbsa_path)
+
+    g_msa = g_cbsa[g_cbsa["LSAD10"] == "M1"].copy()
+    g = g_msa.merge(df_funding_year, left_on="CBSAFP10", right_on=CBSACODE, how="inner")
+
+    g_plot = g.to_crs(5070)
+
+    fig, ax = plt.subplots(figsize=(11, 8))
+    g_plot.plot(
+        column=FUNDING,
+        cmap="YlGnBu",
+        legend=True,
+        vmin=vmin,
+        vmax=vmax,
+        missing_kwds={"color": "white", "label": "No data"},
+        linewidth=0.2,
+        edgecolor="black",
+        legend_kwds={
+            "label": "Log funding per capita",
+            "shrink": 0.6,      # makes colorbar shorter
+            "aspect": 25,       # makes it thinner
+            "pad": 0.02, 
+        },
+        ax=ax
+    )
+
+    ax.set_title(f"NIH Funding by MSA, {year}", pad=12)
+    ax.set_axis_off()
+
+    print(f"Saved map for {year}")
+    output_png = f"{base_path}/Outputs/Maps/Log_percap/funding_map_{year}.png"
+    plt.savefig(output_png, dpi=300, bbox_inches="tight")
+    plt.show()
+    plt.close()
+
+# %%
+# g_plot.plot(
+    #     column=FUNDING,
+    #     cmap="YlGnBu",
+    #     legend=True,
+    #     scheme="UserDefined",
+    #     classification_kwds={"bins": bins},
+    #     missing_kwds={"color": "white", "label": "No data"},
+    #     linewidth=0.2,
+    #     edgecolor="black",
+    #     legend_kwds={
+    #         "title": "Funding per capita",
+    #         "loc": "upper right",
+    #         "fontsize": 8,
+    #         "markerscale": 0.7,
+    #         "labelspacing": 0.3,
+    #     },
+    #     ax=ax
+    # )
 
 # %%
 # also do with log growth

@@ -10,6 +10,16 @@ save "`path'/Data/NIH_Outcomes/nih_timeseries.dta", replace
 use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
 keep if year >= 1997 & year <= 2008
 xtset cbsa_code year
+eststo m1: xtreg ln_firms L1.ln_funding i.year, fe absorb(cbsa_code) vce(cluster cbsa_code) // update with this
+eststo m2: xtreg ln_estabs L1.ln_funding L1.cbsa_code i.year, fe vce(cluster cbsa_code)
+eststo m3: xtreg ln_emp L1.ln_funding L1.cbsa_code i.year, fe vce(cluster cbsa_code)
+esttab m1 m2 m3 using "`path'/Outputs/Tables/Indus_health/panel_L1.csv", se replace
+
+
+
+use "`path'/Data/NIH_Outcomes/nih_timeseries.dta", clear
+keep if year >= 1997 & year <= 2008
+xtset cbsa_code year
 * one year lags
 eststo m1: xtreg ln_firms L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)
 eststo m2: xtreg ln_estabs L1.ln_funding L1.ln_pop i.year, fe vce(cluster cbsa_code)

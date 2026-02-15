@@ -31,6 +31,10 @@ Bartik Shift Share
 
 
 ### Documentation: Relevant Data Files ###
+2/14/26
+Updated funding with all "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta" -- merge with mech/fields, census, and 
+
+
 NIH:
     * Data/NIH_v3/nih_all.dta = Has funding, field, mech, and census merged
     * Data/NIH_v3/nih_all_outcomes.dta = Has funding, field, mech, census, and bds merged

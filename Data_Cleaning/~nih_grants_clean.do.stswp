@@ -181,7 +181,7 @@ rename funding_adj funding
 gen funding_pc = funding / pop
 gen log_funding = log(funding + 1)
 gen log_funding_pc = log(funding_pc + 1)
-save "`path'/Data/NIH_v4/nih_funding_use.dta", replace
+save "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta", replace
 
 
 

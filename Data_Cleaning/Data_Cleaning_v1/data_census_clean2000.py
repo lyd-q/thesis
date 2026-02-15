@@ -3,6 +3,8 @@ import pandas as pd
 from pathlib import Path
 base_path = Path(__file__).resolve().parent.parent   
 
+
+#%%
 ### Education
 ################################################
 census2000_educ_pop = pd.read_csv(base_path / "Raw_data/Census/census_2000/census2000_educ_pop/DECENNIALDPSF42000.DP2-Data.csv")

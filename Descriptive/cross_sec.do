@@ -3,6 +3,27 @@ ssc install estout
 use "`path'/Data/NIH_Outcomes/sector/nih_health.dta", clear
 save "`path'/Data/NIH_Outcomes/cross_sec.dta", replace
 
+***************
+* Cross section with no lags
+* 1995
+use "`path'/Data/NIH_Outcomes/cross_sec.dta",  clear
+
+forvalues yr = 1992(1)2022 {
+	display 'year '
+	eststo f`yr': reg ln_firms ln_funding ln_pop income_per_cap bachelors_deg, robust
+	eststo e`yr': reg ln_estabs ln_funding ln_pop income_per_cap bachelors_deg, robust
+	eststo emp`yr': reg ln_emp ln_funding ln_pop income_per_cap bachelors_deg, robust	
+}
+
+
+
+
+* Cross section with lags
+
+
+
+
+***************
 * 1995
 use "`path'/Data/NIH_Outcomes/cross_sec.dta",  clear
 keep if year == 1995
