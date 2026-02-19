@@ -9,6 +9,11 @@ import seaborn as sns
 base_path = Path(__file__).resolve().parent.parent.parent
 
 nih = pd.read_stata(base_path / "Data/NIH_v4/nih_funding_use.dta")
+sns.scatterplot(
+    data=nih.groupby('year', as_index=False)['funding_pc'].mean(),
+    x='year',
+    y='funding_pc'
+)
 
 #%%
 nih_annual = (

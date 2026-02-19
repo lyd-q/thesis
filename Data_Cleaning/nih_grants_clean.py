@@ -378,7 +378,7 @@ nih.to_csv(base_path / "Data/NIH_v3/nih_all.csv", index=False)
 
 
 #%%
-################### Aggregate science fields into bins ###################
+################### Aggregate mech fields into bins ###################
 nih = pd.read_csv(base_path / "Data/NIH_v3/nih_all.csv")
 
 for bin_name, cols in mech_bins.items():

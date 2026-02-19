@@ -130,7 +130,8 @@ save "`path'/Data/NIH_v3/nih_cbsa_msa.dta", replace
 // count if org_duns == "" --> 397,175
  
  ******************************************************************************************************
- * 2/14/26
+	**** FILL-IN TO INCLUDE ALL MSAs 2/14/26
+ ******************************************************************************************************
  * Do fillin on NIH (by year and CBSA)!!!! Before merging any other data into NIH
 use "`path'/Data/NIH_v3/nih_cbsa_msa.dta", clear
 collapse (sum) funding_real funding_adj, by(CBSA_code CBSA_title year)
@@ -141,6 +142,21 @@ save "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta", replace
 use "`path'/Data/Crosswalks/Used/county_cbsa_xwalk_2009.dta", clear
 keep CBSA_code CBSA_title
 duplicates drop // 374 MSAs
+
+* DROP PUERTO RICO
+drop if CBSA_code == "49500" | CBSA_code == "10380" | CBSA_code == "21940" | CBSA_code == "25020" | CBSA_code == "32420" | CBSA_code == "38660" | CBSA_code == "41980" | CBSA_code == "41900"
+
+// CBSA_code	CBSA_title
+// 49500	Yauco, PR
+// 10380	Aguadilla-Isabela-San Sebastián, PR
+// 21940	Fajardo, PR
+// 25020	Guayama, PR
+// 32420	Mayagüez, PR
+// 38660	Ponce, PR
+// 41980	San Juan-Caguas-Guaynabo, PR
+// 41900	San Germán-Cabo Rojo, PR
+
+* gets us to the 366 CBSAs there should be
 save "`path'/Data/Crosswalks/Used/cbsa_list.dta", replace
 
 use "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta", clear
@@ -185,7 +201,8 @@ save "`path'/Data/NIH_v4/nih_funding_use.dta", replace
 
 
 
- ******************************************************************************************************
+
+******************************************************************************************************
 
  
 * 2/5/26

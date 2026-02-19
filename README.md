@@ -31,8 +31,11 @@ Bartik Shift Share
 
 
 ### Documentation: Relevant Data Files ###
+Feb 2026
+NIH_v4/nih_funding.dta is updated to have all MSAs and per capita
+
 2/14/26
-Updated funding with all "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta" -- merge with mech/fields, census, and 
+Updated funding with all "`path'/Data/NIH_v3/nih_cbsa_msa_funding.dta" -- merge with mech/fields, census..
 
 
 NIH:

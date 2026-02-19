@@ -198,7 +198,7 @@ use "`path'/Data/nih_msa.dta", clear
 append using "`path'/Data/nih_msa_manual_matched.dta", force
 drop if msa == . | msa == 9999
 save "`path'/Data/nih_msa.dta", replace
-*/
+
 
 ************************************************************
 	*** County to MSA with 2003 crosswalk
@@ -229,7 +229,7 @@ drop _m
 save "`path'/Data/nih_cbsa.dta", replace
 
 *** Do not need to add in unmatched, because those are counties not part of MSAs
-
+*/
 
 ***************************************************************
 	*** Adjust for inflation on the individual grants

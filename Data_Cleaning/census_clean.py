@@ -5,7 +5,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 base_path = Path(__file__).resolve().parent.parent.parent
 
-# %% 1990 Census
+# %% ######################## 1990 Census #######################
 census1990 = pd.read_csv(base_path / "Raw_data/Census/census_1990/census1990.csv")
 
 keep = ["STUSAB", "COUNTY", "COUNTYA", "STATE", "STATEA", "ET1001", "E37006", "E37007", "E4P014", "E4P015", "E4U001", "E01001"]
@@ -148,7 +148,7 @@ df["areaname"] = df["areaname"].str.strip()
 
 df.to_csv(base_path / "Data/census/pop_1990_1999.csv", index=False)
 
-#%% 2000 Census: Here we go again
+#%% ################ 2000 Census: Here we go again ####################
 
 # This is total population so I don't even necessarily want it
 census2000 = pd.read_csv('/Users/lydia/Desktop/Thesis/Raw_data/Census/census_2000/nhgis0006_csv/nhgis0006_ts_nominal_county.csv')
@@ -231,4 +231,16 @@ census_msa['income_per_cap'] = census_msa['total_income_imputed'] / census_msa['
 census_msa['share_college'] = census_msa['college'] / census_msa['pop']
 census_msa.to_csv(base_path / "Data/Census/census_2000_v2/census2000_msa.csv", index=False)
 
-# %%
+#%% ################ 2010 Census: Here we go again v2 ####################
+
+census2010 = pd.read_csv("/Users/lydia/Desktop/Thesis/Data/Census/census_2010/nhgis0009_csv/nhgis0009_ds175_2010_county.csv")
+census2010 = census2010.rename(columns={
+    'STATEA' : 'state_code',
+    'COUNTYA' : 'county_code',
+    'COUNTY' : 'county_name',
+    "IXMM022" : "college",
+    "I9CE001" : "employed",
+    "I6IM001" : "income_per_cap",
+})
+
+census2010 = census2010[['state_code', 'county_code', 'county_name', 'college', 'employed', 'income_per_cap']]

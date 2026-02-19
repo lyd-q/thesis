@@ -1,0 +1,6 @@
+local path "/Users/lydia/Desktop/Thesis"
+
+
+
+use "`path'/Data/Working/nih_counties.dta", clear
+// 97% of individual grants were matched to counties
