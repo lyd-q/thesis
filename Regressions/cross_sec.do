@@ -1,24 +1,37 @@
 local path "/Users/lydia/Desktop/Thesis"
 ssc install estout
-use "`path'/Data/NIH_Outcomes/sector/nih_health.dta", clear
-save "`path'/Data/NIH_Outcomes/cross_sec.dta", replace
 
-***************
-* Cross section with no lags
-* 1995
-use "`path'/Data/NIH_Outcomes/cross_sec.dta",  clear
+****************************** Prepare Data ******************************
+import delimited "`path'/Data/NIH_v4/Use/nih_health.csv", clear
+save "`path'/Data/NIH_v4/Use/nih_health.dta", replace
 
-forvalues yr = 1992(1)2022 {
-	display 'year '
-	eststo f`yr': reg ln_firms ln_funding ln_pop income_per_cap bachelors_deg, robust
-	eststo e`yr': reg ln_estabs ln_funding ln_pop income_per_cap bachelors_deg, robust
-	eststo emp`yr': reg ln_emp ln_funding ln_pop income_per_cap bachelors_deg, robust	
+use "`path'/Data/NIH_v4/Use/nih_health.dta", clear
+save "`path'/Data/NIH_v4/Regress/cross_sec.dta", replace
+
+***************************** Annual Cross Section ******************************
+
+* 2/19/26
+*** Cross section on all years, with no lags
+use "`path'/Data/NIH_v4/Regress/cross_sec.dta", clear
+
+forvalues yr = 1992(1)2009 {
+	display `yr'
+	eststo f`yr': reg ln_firms ln_funding ln_pop income_per_cap college, robust
+	eststo e`yr': reg ln_estabs ln_funding ln_pop income_per_cap college, robust
+	eststo emp`yr': reg ln_emp ln_funding ln_pop income_per_cap college, robust	
 }
+* levels college and not log college ok?
+
+esttab f1992 f1993 f1994 f1995 f1996 f1997 f1998 f1999 f2000 f2001 f2002 f2003 f2004 f2005 f2006 f2007 f2008 f2009 using "`path'/Outputs/Tables/Health/cross_sec_firms.tex", label replace se mtitles("1992" "1993" "1994" "1995" "1996" "1997" "1998" "1999" "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
+
+esttab e1992 e1993 e1994 e1995 e1996 e1997 e1998 e1999 e2000 e2001 e2002 e2003 e2004 e2005 e2006 e2007 e2008 e2009 using "`path'/Outputs/Tables/Health/cross_sec_estabs.tex", label replace se mtitles("1992" "1993" "1994" "1995" "1996" "1997" "1998" "1999" "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
+
+esttab emp1992 emp1993 emp1994 emp1995 emp1996 emp1997 emp1998 emp1999 emp2000 emp2001 emp2002 emp2003 emp2004 emp2005 emp2006 emp2007 emp2008 emp2009 using "`path'/Outputs/Tables/Health/cross_sec_emp.tex", label replace se mtitles("1992" "1993" "1994" "1995" "1996" "1997" "1998" "1999" "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009") coeflabels(ln_funding "Log NIH Funding" ln_pop "Log Population" income_per_cap "Income per Capita" bachelors_deg "College Educated (count)") drop(_cons)
 
 
 
 
-* Cross section with lags
+*** Cross section with lags
 
 
 

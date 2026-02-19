@@ -134,6 +134,10 @@ print(combined_2000['CBSA_title'].value_counts())
 
 combined = pd.concat([combined_1990, combined_2000], axis=0)
 combined = combined.sort_values(by=['CBSA_code', 'year'])
+
+# Rename log to ln
+combined = combined.rename(columns = {'log_funding' : 'ln_funding', 'log_funding_pc' : 'ln_funding_pc'})
+combined['ln_pop'] = np.log(combined['pop'])
 combined.to_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv", index=False)
 
 # %%
@@ -156,3 +160,5 @@ combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_mer
 bds_health = bds_health.rename(columns={'cbsa_code' : 'CBSA_code'})
 combined_health = combined.merge(bds_health, on=['year', 'CBSA_code'], how='left')
 combined_health.to_csv(base_path / "Data/NIH_v4/Use/nih_health.csv", index=False)
+
+# %%
