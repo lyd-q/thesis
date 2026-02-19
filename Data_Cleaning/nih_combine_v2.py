@@ -117,6 +117,10 @@ nih2000 = combined[(combined['year'] >= 2000) & (combined['year'] < 2010)]
 nih2010 = combined[(combined['year'] >= 2010) & (combined['year'] <= 2020)] # exclude
 
 # Drop population in census before merging because it is in NIH file already
+census1990 = census1990.drop(columns='pop')
+census2000 = census2000.drop(columns='pop')
+census2010 = census2010.drop(columns='pop')
+
 # Examining census
 combined_1990 = nih1990.merge(census1990, on=['CBSA_title', 'CBSA_code'], how='left', indicator=True)
 print(combined_1990['_merge'].value_counts())
@@ -128,7 +132,27 @@ print(combined_2000['_merge'].value_counts())
 combined_2000 = combined_2000.drop(columns='_merge')
 print(combined_2000['CBSA_title'].value_counts())
 
-combined = pd.concat([nih1990, nih2000], axis=0)
+combined = pd.concat([combined_1990, combined_2000], axis=0)
 combined = combined.sort_values(by=['CBSA_code', 'year'])
 combined.to_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv", index=False)
 
+# %%
+################# BDS - EDUCATION ####################
+combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv")
+bds_educ = bds_educ.rename(columns={'cbsa_code' : 'CBSA_code'})
+combined_educ = combined.merge(bds_educ, on=['year', 'CBSA_code'], how='left')
+combined_educ.to_csv(base_path / "Data/NIH_v4/Use/nih_educ.csv", index=False)
+
+# %%
+################# BDS - SCIENCE ####################
+combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv")
+bds_science = bds_science.rename(columns={'cbsa_code' : 'CBSA_code'})
+combined_educ = combined.merge(bds_science, on=['year', 'CBSA_code'], how='left')
+combined_educ.to_csv(base_path / "Data/NIH_v4/Use/nih_science.csv", index=False)
+
+# %%
+################# BDS - HEALTH ####################
+combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv")
+bds_health = bds_health.rename(columns={'cbsa_code' : 'CBSA_code'})
+combined_health = combined.merge(bds_health, on=['year', 'CBSA_code'], how='left')
+combined_health.to_csv(base_path / "Data/NIH_v4/Use/nih_health.csv", index=False)
