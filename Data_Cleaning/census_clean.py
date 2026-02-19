@@ -88,6 +88,7 @@ census_msa['share_gradschool'] = census_msa['graduate_deg'] / census_msa['total_
 
 census_msa['share_health_indus'] = census_msa['indus_health_services'] / census_msa['total_pop']
 census_msa['share_educ_indus'] = census_msa['indus_educ_services'] / census_msa['total_pop']
+census_msa['share_emp'] = census_msa['indus_educ_services'] / census_msa['total_pop']
 
 # log population
 census_msa['log_pop'] = np.log(census_msa['total_pop'])
@@ -221,26 +222,187 @@ census_msa = census_msa.groupby(['CBSA_code'], as_index = False).agg({
     'pop': 'sum',
     'total_income_imputed': 'sum',
     'college': 'sum',
+    'employed': 'sum'
 })
 
 
 # Divide 'total_income_imputed' by 'total_pop' to get new MSA income_per_cap
 census_msa['income_per_cap'] = census_msa['total_income_imputed'] / census_msa['pop']
-
+# share employed
+census_msa['share_emp'] = census_msa['employed'] / census_msa['pop']
 # share college
 census_msa['share_college'] = census_msa['college'] / census_msa['pop']
 census_msa.to_csv(base_path / "Data/Census/census_2000_v2/census2000_msa.csv", index=False)
 
 #%% ################ 2010 Census: Here we go again v2 ####################
-
-census2010 = pd.read_csv("/Users/lydia/Desktop/Thesis/Data/Census/census_2010/nhgis0009_csv/nhgis0009_ds175_2010_county.csv")
+census2010 = pd.read_csv("/Users/lydia/Desktop/Thesis/Raw_data/Census/census_1990/nhgis0002_csv/nhgis0010_ds123_1990_county.csv")
 census2010 = census2010.rename(columns={
     'STATEA' : 'state_code',
     'COUNTYA' : 'county_code',
     'COUNTY' : 'county_name',
     "IXMM022" : "college",
     "I9CE001" : "employed",
-    "I6IM001" : "income_per_cap",
+    "I6IM001" : "income_per_cap"
 })
 
 census2010 = census2010[['state_code', 'county_code', 'county_name', 'college', 'employed', 'income_per_cap']]
+
+#%%
+census2010[['county_code', 'state_code']] = census2010[['county_code', 'state_code']].astype(str)
+census2010.head()
+# make combined county code
+census2010['state_code'] = census2010['state_code'].astype('string').str.strip().str.zfill(2)
+census2010['county_code'] = census2010['county_code'].astype('string').str.strip().str.zfill(3)
+census2010['county'] = census2010['state_code'] + census2010['county_code']
+census2010['county'] = census2010['county'].astype('string').str.strip().str.zfill(5)
+
+census2010.to_csv(base_path / "Data/Census/census_2010/census2010_county.csv", index=False)
+
+#%% add population
+pop2010 = pd.read_csv('/Users/lydia/Desktop/Thesis/Raw_data/Census/census_2010/nhgis0009_csv/nhgis0009_ds172_2010_county.csv')
+pop2010 = pop2010.rename(columns={
+    'STATEA' : 'state_code',
+    'COUNTYA' : 'county_code',
+    'COUNTY' : 'county_name',
+    "H7V001" : 'pop'
+})
+
+pop2010 = pop2010[['state_code', 'county_code', 'pop']]
+pop2010['state_code'] = pop2010['state_code'].astype('string').str.strip().str.zfill(2)
+pop2010['county_code'] = pop2010['county_code'].astype('string').str.strip().str.zfill(3)
+pop2010['county'] = pop2010['state_code'] + pop2010['county_code']
+pop2010['county'] = pop2010['county'].astype('string').str.strip().str.zfill(5)
+pop2010 = pop2010.drop(columns=['county_code', 'state_code'])
+# %%
+census2010_merged = census2010.merge(pop2010, on=['county'], indicator=True)
+print(census2010_merged['_merge'].value_counts())
+census2010_merged = census2010_merged.drop(columns=['_merge'])
+# %% Merge to MSAs
+county_cbsa = pd.read_csv(base_path / "Data/Crosswalks/Used/county_cbsa_xwalk_2009.csv")
+county_cbsa['county_fips'] = county_cbsa['county_fips'].astype('string').str.strip().str.zfill(5)
+census2010_merged['county'] = census2010_merged['county'].astype('string').str.strip().str.zfill(5)
+census_msa = census2010_merged.merge(
+    county_cbsa,
+    "inner",
+    left_on=['county'],
+    right_on=['county_fips'],
+    indicator=True
+)
+print(census_msa['_merge'].value_counts()) # this is fine! because all the cbsas are merged in
+census_msa = census_msa[census_msa['_merge'] == 'both']
+census_msa.to_csv(base_path / "Data/Census/census_2010/census2010_county_msa.csv", index=False)
+
+# %% Now to collapse
+# Need to go from county income_per_cap to MSA income_per_cap
+census_msa['total_income_imputed'] = census_msa['income_per_cap'] * census_msa['pop']
+
+# collapse
+census_msa = census_msa.groupby(['CBSA_code'], as_index = False).agg({
+    'CBSA_level': 'first',
+    'CBSA_title': 'first',
+    'state': 'first',
+    'pop': 'sum',
+    'total_income_imputed': 'sum',
+    'college': 'sum',
+    'employed': 'sum'
+})
+# Divide 'total_income_imputed' by 'total_pop' to get new MSA income_per_cap
+census_msa['income_per_cap'] = census_msa['total_income_imputed'] / census_msa['pop']
+# share employed
+census_msa['share_emp'] = census_msa['employed'] / census_msa['pop']
+# share college
+census_msa['share_college'] = census_msa['college'] / census_msa['pop']
+census_msa.to_csv(base_path / "Data/Census/census_2010/census2010_msa.csv", index=False)
+# There's less micropolitan areas but count of MSAs are basically the same
+
+
+
+#%% ################ Re-do 1990 Census ####################
+# This is total population so I don't even necessarily want it
+census1990 = pd.read_csv('/Users/lydia/Desktop/Thesis/Raw_data/Census/census_1990/nhgis0002_csv/nhgis0011_ds123_1990_county.csv')
+
+census1990 = census1990.rename(columns={
+    'STATEA' : 'state_code',
+    'COUNTYA' : 'county_code',
+    'COUNTY' : 'county_name',
+    "E33006" : "college",
+    "E4I002" : "employed_men",
+    "E4I006" : "employed_women",
+    "E01001" : "income_per_cap",
+})
+census1990['employed'] = census1990['employed_men'] + census1990['employed_women']
+census1990 = census1990[['state_code', 'county_code', 'county_name', 'college', 'employed', 'income_per_cap']]
+
+census1990[['county_code', 'state_code']] = census1990[['county_code', 'state_code']].astype(str)
+census1990.head()
+# %%
+# make combined county code
+census1990['state_code'] = census1990['state_code'].astype('string').str.strip().str.zfill(2)
+census1990['county_code'] = census1990['county_code'].astype('string').str.strip().str.zfill(3)
+census1990['county'] = census1990['state_code'] + census1990['county_code']
+census1990['county'] = census1990['county'].astype('string').str.strip().str.zfill(5)
+
+census1990.to_csv(base_path / "Data/Census/census_1990_v2/census1990_county.csv", index=False)
+
+#%% add population
+pop1990 = pd.read_csv('/Users/lydia/Desktop/Thesis/Raw_data/Census/census_1990/nhgis0002_csv/nhgis0002_ds120_1990_county.csv')
+pop1990 = pop1990.rename(columns={
+    'STATEA' : 'state_code',
+    'COUNTYA' : 'county_code',
+    'COUNTY' : 'county_name',
+    "ET1001" : 'pop'
+})
+
+pop1990 = pop1990[['state_code', 'county_code', 'pop']]
+pop1990['state_code'] = pop1990['state_code'].astype('string').str.strip().str.zfill(2)
+pop1990['county_code'] = pop1990['county_code'].astype('string').str.strip().str.zfill(3)
+pop1990['county'] = pop1990['state_code'] + pop1990['county_code']
+pop1990['county'] = pop1990['county'].astype('string').str.strip().str.zfill(5)
+pop1990 = pop1990.drop(columns=['county_code', 'state_code'])
+# %%
+census1990_merged = census1990.merge(pop1990, on=['county'], indicator=True)
+print(census1990_merged['_merge'].value_counts())
+census1990_merged = census1990_merged.drop(columns=['_merge'])
+# %% Merge to MSAs
+county_cbsa = pd.read_csv(base_path / "Data/Crosswalks/Used/county_cbsa_xwalk_2009.csv")
+county_cbsa['county_fips'] = county_cbsa['county_fips'].astype('string').str.strip().str.zfill(5)
+census1990_merged['county'] = census1990_merged['county'].astype('string').str.strip().str.zfill(5)
+census_msa = census1990_merged.merge(
+    county_cbsa,
+    "inner",
+    left_on=['county'],
+    right_on=['county_fips'],
+    indicator=True
+)
+print(census_msa['_merge'].value_counts()) # this is fine! because all the cbsas are merged in
+census_msa = census_msa[census_msa['_merge'] == 'both']
+census_msa.to_csv(base_path / "Data/Census/census_1990_v2/census1990_county_msa.csv", index=False)
+
+# %% Now to collapse
+census_msa['pop'] = pd.to_numeric(census_msa['pop'])
+
+
+# Need to go from county income_per_cap to MSA income_per_cap
+census_msa['total_income_imputed'] = census_msa['income_per_cap'] * census_msa['pop']
+
+# collapse
+census_msa = census_msa.groupby(['CBSA_code'], as_index = False).agg({
+    'CBSA_level': 'first',
+    'CBSA_title': 'first',
+    'state': 'first',
+    'pop': 'sum',
+    'total_income_imputed': 'sum',
+    'college': 'sum',
+    'employed': 'sum'
+})
+
+
+# Divide 'total_income_imputed' by 'total_pop' to get new MSA income_per_cap
+census_msa['income_per_cap'] = census_msa['total_income_imputed'] / census_msa['pop']
+# share employed
+census_msa['share_emp'] = census_msa['employed'] / census_msa['pop']
+# share college
+census_msa['share_college'] = census_msa['college'] / census_msa['pop']
+census_msa.to_csv(base_path / "Data/Census/census_1990_v2/census1990_msa.csv", index=False)
+
+# %%

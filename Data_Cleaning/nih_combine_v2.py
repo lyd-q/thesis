@@ -16,8 +16,10 @@ nih_field = pd.read_csv(base_path / "Data/NIH_v3/Working/nih_funding_field.csv")
 nih_mech = pd.read_csv(base_path / "Data/NIH_v3/Working/nih_funding_mech.csv")
 
 # Census
+# Notes: share_emp for 1990 and 2000 seems off. share_college for 2010 seems off.
 census1990 = pd.read_csv(base_path / "Data/Census/census_1990_v2/census1990_msa.csv")
 census2000 = pd.read_csv(base_path / "Data/Census/census_2000_v2/census2000_msa.csv")
+census2010 = pd.read_csv(base_path / "Data/Census/census_2010/census2010_msa.csv")
 
 # Outcomes
 bds_educ = pd.read_stata(base_path / "Data/Outcomes/sector/bds_educ.dta")
@@ -107,13 +109,26 @@ combined.to_csv(base_path / "Data/NIH_v4/Working/nih_field_mech_merge.csv", inde
 
 # %%
 ################# Census ####################
+combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_field_mech_merge.csv")
 
 # Split by year
-
-# Should I get 2010 Census?
-
 nih1990 = combined[combined['year'] < 2000]
 nih2000 = combined[(combined['year'] >= 2000) & (combined['year'] < 2010)]
-nih2010 = combined[(combined['year'] >= 2010) & (combined['year'] <= 2020)]
+nih2010 = combined[(combined['year'] >= 2010) & (combined['year'] <= 2020)] # exclude
 
+# Drop population in census before merging because it is in NIH file already
+# Examining census
+combined_1990 = nih1990.merge(census1990, on=['CBSA_title', 'CBSA_code'], how='left', indicator=True)
+print(combined_1990['_merge'].value_counts())
+combined_1990 = combined_1990.drop(columns='_merge')
+print(combined_1990['CBSA_title'].value_counts())
+
+combined_2000 = nih2000.merge(census2000, on=['CBSA_title', 'CBSA_code'], how='left', indicator=True)
+print(combined_2000['_merge'].value_counts())
+combined_2000 = combined_2000.drop(columns='_merge')
+print(combined_2000['CBSA_title'].value_counts())
+
+combined = pd.concat([nih1990, nih2000], axis=0)
+combined = combined.sort_values(by=['CBSA_code', 'year'])
+combined.to_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv", index=False)
 
