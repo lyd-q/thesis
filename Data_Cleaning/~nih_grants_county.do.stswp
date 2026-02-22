@@ -1,0 +1,21 @@
+local path "/Users/lydia/Desktop/Thesis"
+
+use "`path'/Data/Working/nih_counties.dta", clear
+collapse (sum) FUNDING, by (county year county_name state)
+
+merge m:1 year using "`path'/Data/Working/cpi_annual_avg.dta"
+keep if _m == 3
+drop _m
+save "`path'/Data/NIH_v4/nih_county.dta", replace
+
+use "`path'/Data/NIH_v4/nih_county.dta", clear
+gen cpi_2000 = cpi if year == 2000
+egen base_cpi = max(cpi_2000)
+drop cpi_2000
+
+rename FUNDING funding_nominal
+gen funding = (base_cpi / cpi) * funding_nominal
+drop base_cpi cpi
+save "`path'/Data/NIH_v4/nih_county.dta", replace
+
+fillin 

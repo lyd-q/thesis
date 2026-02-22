@@ -151,8 +151,8 @@ combined_educ.to_csv(base_path / "Data/NIH_v4/Use/nih_educ.csv", index=False)
 ################# BDS - SCIENCE ####################
 combined = pd.read_csv(base_path / "Data/NIH_v4/Working/nih_fieldmech_census_merge.csv")
 bds_science = bds_science.rename(columns={'cbsa_code' : 'CBSA_code'})
-combined_educ = combined.merge(bds_science, on=['year', 'CBSA_code'], how='left')
-combined_educ.to_csv(base_path / "Data/NIH_v4/Use/nih_science.csv", index=False)
+combined_science = combined.merge(bds_science, on=['year', 'CBSA_code'], how='left')
+combined_science.to_csv(base_path / "Data/NIH_v4/Use/nih_science.csv", index=False)
 
 # %%
 ################# BDS - HEALTH ####################
@@ -161,4 +161,16 @@ bds_health = bds_health.rename(columns={'cbsa_code' : 'CBSA_code'})
 combined_health = combined.merge(bds_health, on=['year', 'CBSA_code'], how='left')
 combined_health.to_csv(base_path / "Data/NIH_v4/Use/nih_health.csv", index=False)
 
+# %% ### Side note: what MSAs are missing in the BDS files?
+county_cbsa = pd.read_csv(base_path / "Data/Crosswalks/Used/county_cbsa_xwalk_2009.csv")
+county_cbsa = county_cbsa[county_cbsa['CBSA_level_id'] == 1]
+county_cbsa = county_cbsa[['CBSA_code', 'CBSA_title']].drop_duplicates()
+bds_educ = bds_educ.rename(columns={'cbsa_code' : 'CBSA_code'})
+bds_educ = bds_educ.loc[(bds_educ['year'] >= 1992) & (bds_educ['year'] <= 2008)]
+bds_health_check = bds_educ.merge(county_cbsa, on=['CBSA_code'], how='outer', indicator=True)
+print(bds_health_check['_merge'].value_counts())
+bds_health_check = bds_health_check[bds_health_check['_merge'] == 'right_only']
+print(bds_health_check['CBSA_title'].value_counts())
 # %%
+bds_health_check.to_csv(base_path / "Data/NIH_v4/Use/nih_health_check.csv", index=False)
+### 343 MSAs for later regressions. The unmatched are mostly PR and some other MSAs with code issues. Will not address rn.
